@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EM Case Trainer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .score {
+            background: #1d4ed8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .header-info {
+            font-size: 14px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .urgency {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .urgency.high { background: #fef2f2; color: #dc2626; }
+        .urgency.medium { background: #fefce8; color: #ca8a04; }
+        .urgency.low { background: #f0fdf4; color: #16a34a; }
+        
+        .content {
+            padding: 16px;
+        }
+        
+        .case-header {
+            margin-bottom: 16px;
+        }
+        
+        .case-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .presentation {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .vitals {
+            background: #eff6ff;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .vitals-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 4px;
+        }
+        
+        .vitals-text {
+            font-size: 14px;
+            color: #1e40af;
+        }
+        
+        .progress {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            flex: 1;
+            border-radius: 4px;
+            background: #e5e7eb;
+        }
+        
+        .progress-bar.active {
+            background: #3b82f6;
+        }
+        
+        .question {
+            margin-bottom: 16px;
+        }
+        
+        .question-title {
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .option {
+            width: 100%;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .option:hover:not(:disabled) {
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+        
+        .option.correct {
+            background: #f0fdf4;
+            border-color: #16a34a;
+            color: #15803d;
+        }
+        
+        .option.incorrect {
+            background: #fef2f2;
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+        
+        .option.correct-answer {
+            background: #f0fdf4;
+            border-color: #16a34a;
+            color: #15803d;
+        }
+        
+        .option:disabled {
+            cursor: default;
+        }
+        
+        .explanation {
+            background: #eff6ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .explanation-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 4px;
+        }
+        
+        .explanation-text {
+            font-size: 14px;
+            color: #1e40af;
+            line-height: 1.5;
+        }
+        
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .admin-toggle {
+            background: none;
+            border: none;
+            color: white;
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .admin-toggle:hover {
+            background: #1d4ed8;
+        }
+        
+        .admin-panel {
+            background: #1f2937;
+            color: white;
+            padding: 16px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .case-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: white;
+            color: #333;
+        }
+        
+        .case-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        
+        .btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .btn-add {
+            background: #16a34a;
+            color: white;
+            margin-bottom: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #374151;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .step-editor {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .option-radio {
+            margin: 0;
+        }
+        
+        .option-input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="app"></div>
+    </div>
+
+    <script>
+        class EmCaseTrainer {
+            constructor() {
+                this.currentCase = 0;
+                this.step = 0;
+                this.selectedAnswers = {};
+                this.showExplanation = false;
+                this.score = { correct: 0, total: 0 };
+                this.showAdmin = false;
+                this.editingCase = null;
+                
+                this.defaultCases = [
+                    {
+                        id: 1,
+                        category: "Chest Pain",
+                        urgency: "high",
+                        presentation: "67M presents with crushing chest pain radiating to left arm. Started 45 min ago while watching TV. Diaphoretic, anxious.",
+                        vitals: "BP: 160/95, HR: 102, RR: 22, O2: 96% RA, Temp: 98.6°F",
+                        steps: [
+                            {
+                                question: "Most likely diagnosis?",
+                                options: ["GERD", "Anxiety", "STEMI", "Pulmonary embolism"],
+                                correct: 2,
+                                explanation: "Classic presentation of STEMI: crushing chest pain, radiation, diaphoresis, and demographics."
+                            },
+                            {
+                                question: "First intervention?",
+                                options: ["IV access", "12-lead EKG", "Chest X-ray", "Nitroglycerin"],
+                                correct: 1,
+                                explanation: "12-lead EKG within 10 minutes is the priority to confirm STEMI and guide treatment."
+                            },
+                            {
+                                question: "If EKG shows ST elevation in V2-V4, next step?",
+                                options: ["Heparin only", "Cath lab activation", "Thrombolytics", "Aspirin and observe"],
+                                correct: 1,
+                                explanation: "Anterior STEMI requires immediate cath lab activation for primary PCI within 90 minutes."
+                            }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        category: "Shortness of Breath",
+                        urgency: "high",
+                        presentation: "34F with sudden onset severe dyspnea and sharp chest pain. Recently returned from Europe. No fever.",
+                        vitals: "BP: 100/60, HR: 118, RR: 28, O2: 88% RA, Temp: 98.2°F",
+                        steps: [
+                            {
+                                question: "Top differential diagnosis?",
+                                options: ["Pneumonia", "Asthma exacerbation", "Pulmonary embolism", "Panic attack"],
+                                correct: 2,
+                                explanation: "Recent travel + sudden dyspnea + chest pain + tachycardia = PE until proven otherwise."
+                            },
+                            {
+                                question: "Most appropriate imaging?",
+                                options: ["Chest X-ray", "CT angiogram", "V/Q scan", "Echocardiogram"],
+                                correct: 1,
+                                explanation: "CTPA is first-line for PE diagnosis in hemodynamically stable patients with adequate renal function."
+                            },
+                            {
+                                question: "While awaiting imaging, best initial treatment?",
+                                options: ["Albuterol", "Heparin", "Morphine", "Wait for results"],
+                                correct: 1,
+                                explanation: "High clinical suspicion for PE warrants immediate anticoagulation unless contraindicated."
+                            }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        category: "Trauma",
+                        urgency: "high",
+                        presentation: "22M motorcycle vs car accident. Restless, pale. Complains of severe abdominal pain. Seatbelt mark across abdomen.",
+                        vitals: "BP: 90/60, HR: 120, RR: 24, O2: 94% RA, Temp: 97.8°F",
+                        steps: [
+                            {
+                                question: "Primary concern based on mechanism?",
+                                options: ["Femur fracture", "Head injury", "Intra-abdominal bleeding", "Pneumothorax"],
+                                correct: 2,
+                                explanation: "Hypotension + tachycardia + abdominal pain + mechanism = concerning for intra-abdominal hemorrhage."
+                            },
+                            {
+                                question: "Initial imaging priority?",
+                                options: ["CT head", "FAST exam", "Chest X-ray", "Pelvis X-ray"],
+                                correct: 1,
+                                explanation: "FAST exam quickly identifies free fluid/hemorrhage in unstable trauma patients."
+                            },
+                            {
+                                question: "If FAST is positive and patient remains hypotensive?",
+                                options: ["CT abdomen", "OR immediately", "More IV fluids", "Blood transfusion only"],
+                                correct: 1,
+                                explanation: "Positive FAST + hemodynamic instability = immediate surgical exploration, no delay for CT."
+                            }
+                        ]
+                    }
+                ];
+                
+                this.loadCases();
+                this.render();
+            }
+            
+            loadCases() {
+                try {
+                    const saved = localStorage.getItem('emCases');
+                    this.cases = saved ? JSON.parse(saved) : this.defaultCases;
+                } catch {
+                    this.cases = this.defaultCases;
+                }
+            }
+            
+            saveCases() {
+                try {
+                    localStorage.setItem('emCases', JSON.stringify(this.cases));
+                } catch {
+                    // Ignore storage errors
+                }
+            }
+            
+            getCurrentCase() {
+                return this.cases[this.currentCase];
+            }
+            
+            getCurrentStep() {
+                const currentCase = this.getCurrentCase();
+                return currentCase ? currentCase.steps[this.step] : null;
+            }
+            
+            handleAnswer(answerIndex) {
+                const questionKey = `${this.currentCase}-${this.step}`;
+                this.selectedAnswers[questionKey] = answerIndex;
+                
+                const currentStep = this.getCurrentStep();
+                if (answerIndex === currentStep.correct) {
+                    this.score.correct++;
+                }
+                this.score.total++;
+                
+                this.showExplanation = true;
+                this.render();
+            }
+            
+            nextStep() {
+                const currentCase = this.getCurrentCase();
+                const isLastStep = this.step === currentCase.steps.length - 1;
+                
+                if (isLastStep) {
+                    if (this.currentCase < this.cases.length - 1) {
+                        this.currentCase++;
+                        this.step = 0;
+                    } else {
+                        this.currentCase = 0;
+                        this.step = 0;
+                    }
+                } else {
+                    this.step++;
+                }
+                
+                this.showExplanation = false;
+                this.render();
+            }
+            
+            resetCase() {
+                this.step = 0;
+                this.showExplanation = false;
+                this.selectedAnswers = {};
+                this.render();
+            }
+            
+            toggleAdmin() {
+                this.showAdmin = !this.showAdmin;
+                this.editingCase = null;
+                this.render();
+            }
+            
+            addNewCase() {
+                this.editingCase = {
+                    id: 0,
+                    category: "",
+                    urgency: "medium",
+                    presentation: "",
+                    vitals: "",
+                    steps: [{
+                        question: "",
+                        options: ["", "", "", ""],
+                        correct: 0,
+                        explanation: ""
+                    }]
+                };
+                this.render();
+            }
+            
+            editCase(caseItem) {
+                this.editingCase = JSON.parse(JSON.stringify(caseItem));
+                this.render();
+            }
+            
+            deleteCase(caseId) {
+                if (confirm('Are you sure you want to delete this case?')) {
+                    this.cases = this.cases.filter(c => c.id !== caseId);
+                    if (this.currentCase >= this.cases.length) {
+                        this.currentCase = 0;
+                        this.step = 0;
+                    }
+                    this.saveCases();
+                    this.render();
+                }
+            }
+            
+            saveCase(formData) {
+                if (!formData.category || !formData.presentation || !formData.vitals) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                for (let step of formData.steps) {
+                    if (!step.question || step.options.some(opt => !opt) || !step.explanation) {
+                        alert('Please complete all steps');
+                        return;
+                    }
+                }
+                
+                if (formData.id === 0) {
+                    formData.id = Math.max(...this.cases.map(c => c.id)) + 1;
+                    this.cases.push(formData);
+                } else {
+                    const index = this.cases.findIndex(c => c.id === formData.id);
+                    this.cases[index] = formData;
+                }
+                
+                this.editingCase = null;
+                this.saveCases();
+                this.render();
+            }
+            
+            cancelEdit() {
+                this.editingCase = null;
+                this.render();
+            }
+            
+            render() {
+                const app = document.getElementById('app');
+                
+                if (this.showAdmin) {
+                    app.innerHTML = this.renderAdmin();
+                    this.bindAdminEvents();
+                } else {
+                    app.innerHTML = this.renderTrainer();
+                    this.bindTrainerEvents();
+                }
+            }
+            
+            renderTrainer() {
+                const currentCase = this.getCurrentCase();
+                const currentStep = this.getCurrentStep();
+                
+                if (!currentCase) {
+                    return `
+                        <div class="content">
+                            <div style="text-align: center; margin-top: 80px;">
+                                <p style="color: #6b7280; margin-bottom: 16px;">No cases available</p>
+                                <button class="btn btn-primary" onclick="trainer.toggleAdmin()">Add Cases</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const isLastStep = this.step === currentCase.steps.length - 1;
+                
+                return `
+                    <div class="header">
+                        <div class="header-top">
+                            <div class="header-title">🩺 EM Case Trainer</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="score">Score: ${this.score.correct}/${this.score.total}</div>
+                                <button class="admin-toggle" onclick="trainer.toggleAdmin()">⚙️</button>
+                            </div>
+                        </div>
+                        <div class="header-info">
+                            <span>🕐 Case ${this.currentCase + 1} of ${this.cases.length}</span>
+                            <span class="urgency ${currentCase.urgency}">${currentCase.urgency} priority</span>
+                        </div>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="case-header">
+                            <h2 class="case-title">${currentCase.category}</h2>
+                            <div class="presentation">${currentCase.presentation}</div>
+                            <div class="vitals">
+                                <div class="vitals-label">VITALS</div>
+                                <div class="vitals-text">${currentCase.vitals}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress">
+                            ${currentCase.steps.map((_, index) => 
+                                `<div class="progress-bar ${index <= this.step ? 'active' : ''}"></div>`
+                            ).join('')}
+                        </div>
+                        
+                        <div class="question">
+                            <h3 class="question-title">Step ${this.step + 1}: ${currentStep.question}</h3>
+                            <div class="options">
+                                ${currentStep.options.map((option, index) => {
+                                    const questionKey = `${this.currentCase}-${this.step}`;
+                                    const isSelected = this.selectedAnswers[questionKey] === index;
+                                    const isCorrect = index === currentStep.correct;
+                                    const showResult = this.showExplanation;
+                                    
+                                    let className = 'option';
+                                    let icon = '';
+                                    
+                                    if (showResult) {
+                                        if (isSelected && isCorrect) {
+                                            className += ' correct';
+                                            icon = '✓';
+                                        } else if (isSelected && !isCorrect) {
+                                            className += ' incorrect';
+                                            icon = '✗';
+                                        } else if (isCorrect) {
+                                            className += ' correct-answer';
+                                            icon = '✓';
+                                        }
+                                    }
+                                    
+                                    return `
+                                        <button class="${className}" 
+                                                onclick="trainer.handleAnswer(${index})" 
+                                                ${showResult ? 'disabled' : ''}>
+                                            <span>${option}</span>
+                                            ${icon ? `<span>${icon}</span>` : ''}
+                                        </button>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        
+                        ${this.showExplanation ? `
+                            <div class="explanation">
+                                <div class="explanation-label">📖 EXPLANATION</div>
+                                <div class="explanation-text">${currentStep.explanation}</div>
+                            </div>
+                            
+                            <div class="actions">
+                                <button class="btn btn-primary" onclick="trainer.nextStep()">
+                                    ${isLastStep ? 'Next Case' : 'Next Step'} →
+                                </button>
+                                <button class="btn btn-secondary" onclick="trainer.resetCase()">
+                                    🔄 Reset Case
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            renderAdmin() {
+                if (this.editingCase) {
+                    return this.renderCaseEditor();
+                }
+                
+                return `
+                    <div class="admin-panel">
+                        <div class="admin-header">
+                            <h1>Case Management</h1>
+                            <button class="admin-toggle" onclick="trainer.toggleAdmin()">✕</button>
+                        </div>
+                    </div>
+                    
+                    <div class="content">
+                        <button class="btn btn-add" onclick="trainer.addNewCase()">➕ Add New Case</button>
+                        
+                        ${this.cases.map(caseItem => `
+                            <div class="case-item">
+                                <h3>${caseItem.category}</h3>
+                                <p style="font-size: 14px; color: #6b7280; margin: 8px 0; line-height: 1.4;">${caseItem.presentation}</p>
+                                <span class="urgency ${caseItem.urgency}">${caseItem.urgency} priority</span>
+                                <div class="case-actions">
+                                    <button class="btn-small btn-edit" onclick="trainer.editCase(${JSON.stringify(caseItem).replace(/"/g, '&quot;')})">✏️ Edit</button>
+                                    <button class="btn-small btn-delete" onclick="trainer.deleteCase(${caseItem.id})">🗑️ Delete</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            renderCaseEditor() {
+                const formData = this.editingCase;
+                const isNew = formData.id === 0;
+                
+                return `
+                    <div class="admin-panel">
+                        <div class="admin-header">
+                            <h1>${isNew ? 'New Case' : 'Edit Case'}</h1>
+                            <button class="admin-toggle" onclick="trainer.cancelEdit()">✕</button>
+                        </div>
+                    </div>
+                    
+                    <div class="content">
+                        <form id="caseForm" onsubmit="trainer.handleFormSubmit(event)">
+                            <div class="form-group">
+                                <label class="form-label">Category*</label>
+                                <input type="text" class="form-input" name="category" value="${formData.category}" placeholder="e.g., Chest Pain, Trauma" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Urgency*</label>
+                                <select class="form-input" name="urgency">
+                                    <option value="low" ${formData.urgency === 'low' ? 'selected' : ''}>Low</option>
+                                    <option value="medium" ${formData.urgency === 'medium' ? 'selected' : ''}>Medium</option>
+                                    <option value="high" ${formData.urgency === 'high' ? 'selected' : ''}>High</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Presentation*</label>
+                                <textarea class="form-textarea" name="presentation" placeholder="Patient presentation and chief complaint" required>${formData.presentation}</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Vitals*</label>
+                                <input type="text" class="form-input" name="vitals" value="${formData.vitals}" placeholder="BP: 120/80, HR: 85, RR: 16, O2: 99%, Temp: 98.6°F" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label class="form-label">Steps*</label>
+                                    <button type="button" class="btn-small btn-add" onclick="trainer.addStep()">➕ Add Step</button>
+                                </div>
+                                
+                                <div id="stepsContainer">
+                                    ${formData.steps.map((step, stepIndex) => `
+                                        <div class="step-editor" data-step="${stepIndex}">
+                                            <div class="step-header">
+                                                <span style="font-weight: 500;">Step ${stepIndex + 1}</span>
+                                                ${formData.steps.length > 1 ? `<button type="button" class="btn-small btn-delete" onclick="trainer.removeStep(${stepIndex})">🗑️</button>` : ''}
+                                            </div>
+                                            
+                                            <div style="margin-bottom: 8px;">
+                                                <input type="text" class="form-input" name="question_${stepIndex}" value="${step.question}" placeholder="Question" required>
+                                            </div>
+                                            
+                                            ${step.options.map((option, optionIndex) => `
+                                                <div class="option-row">
+                                                    <input type="radio" name="correct_${stepIndex}" value="${optionIndex}" ${step.correct === optionIndex ? 'checked' : ''} class="option-radio">
+                                                    <input type="text" class="option-input" name="option_${stepIndex}_${optionIndex}" value="${option}" placeholder="Option ${optionIndex + 1}" required>
+                                                </div>
+                                            `).join('')}
+                                            
+                                            <textarea class="form-textarea" name="explanation_${stepIndex}" placeholder="Explanation for correct answer" required>${step.explanation}</textarea>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 8px;">
+                                <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Save Case</button>
+                                <button type="button" class="btn btn-secondary" onclick="trainer.cancelEdit()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+            }
+            
+            bindTrainerEvents() {
+                // Events are bound through onclick attributes
+            }
+            
+            bindAdminEvents() {
+                // Events are bound through onclick attributes
+            }
+            
+            addStep() {
+                this.editingCase.steps.push({
+                    question: "",
+                    options: ["", "", "", ""],
+                    correct: 0,
+                    explanation: ""
+                });
+                this.render();
+            }
+            
+            removeStep(stepIndex) {
+                this.editingCase.steps.splice(stepIndex, 1);
+                this.render();
+            }
+            
+            handleFormSubmit(event) {
+                event.preventDefault();
+                const form = event.target;
+                const formData = new FormData(form);
+                
+                const caseData = {
+                    id: this.editingCase.id,
+                    category: formData.get('category'),
+                    urgency: formData.get('urgency'),
+                    presentation: formData.get('presentation'),
+                    vitals: formData.get('vitals'),
+                    steps: []
+                };
+                
+                // Parse steps
+                const stepCount = this.editingCase.steps.length;
+                for (let i = 0; i < stepCount; i++) {
+                    const question = formData.get(`question_${i}`);
+                    const options = [
+                        formData.get(`option_${i}_0`),
+                        formData.get(`option_${i}_1`),
+                        formData.get(`option_${i}_2`),
+                        formData.get(`option_${i}_3`)
+                    ];
+                    const correct = parseInt(formData.get(`correct_${i}`)) || 0;
+                    const explanation = formData.get(`explanation_${i}`);
+                    
+                    caseData.steps.push({
+                        question,
+                        options,
+                        correct,
+                        explanation
+                    });
+                }
+                
+                this.saveCase(caseData);
+            }
+        }
+        
+        // Initialize the app
+        let trainer;
+        document.addEventListener('DOMContentLoaded', function() {
+            trainer = new EmCaseTrainer();
+        });
+    </script>
+</body>
+</html>
