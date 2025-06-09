@@ -390,6 +390,8 @@
                 this.score = { correct: 0, total: 0 };
                 this.showAdmin = false;
                 this.editingCase = null;
+                this.isAuthenticated = false;
+                this.adminPassword = "EM2024!"; // Change this to your preferred password
                 
                 this.defaultCases = [
                     {
@@ -871,8 +873,29 @@
             }
             
             toggleAdmin() {
-                this.showAdmin = !this.showAdmin;
-                this.editingCase = null;
+                if (!this.isAuthenticated) {
+                    this.showPasswordPrompt();
+                } else {
+                    this.showAdmin = !this.showAdmin;
+                    this.editingCase = null;
+                    this.render();
+                }
+            }
+            
+            showPasswordPrompt() {
+                const password = prompt("Enter admin password to access case management:");
+                if (password === this.adminPassword) {
+                    this.isAuthenticated = true;
+                    this.showAdmin = true;
+                    this.render();
+                } else if (password !== null) { // User didn't cancel
+                    alert("Incorrect password. Access denied.");
+                }
+            }
+            
+            logout() {
+                this.isAuthenticated = false;
+                this.showAdmin = false;
                 this.render();
             }
             
@@ -1066,7 +1089,10 @@
                     <div class="admin-panel">
                         <div class="admin-header">
                             <h1>Case Management</h1>
-                            <button class="admin-toggle" onclick="trainer.toggleAdmin()">✕</button>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="admin-toggle" onclick="trainer.logout()" title="Logout">🚪</button>
+                                <button class="admin-toggle" onclick="trainer.toggleAdmin()">✕</button>
+                            </div>
                         </div>
                     </div>
                     
@@ -1096,7 +1122,10 @@
                     <div class="admin-panel">
                         <div class="admin-header">
                             <h1>${isNew ? 'New Case' : 'Edit Case'}</h1>
-                            <button class="admin-toggle" onclick="trainer.cancelEdit()">✕</button>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="admin-toggle" onclick="trainer.logout()" title="Logout">🚪</button>
+                                <button class="admin-toggle" onclick="trainer.cancelEdit()">✕</button>
+                            </div>
                         </div>
                     </div>
                     
