@@ -801,6 +801,414 @@
                     }
                 ];
                 
+                this.defaultCases = [
+                    {
+                        id: 1,
+                        category: "Chest Pain",
+                        urgency: "high",
+                        presentation: "67M presents with crushing chest pain radiating to left arm. Started 45 min ago while watching TV. Diaphoretic, anxious.",
+                        vitals: "BP: 160/95, HR: 102, RR: 22, O2: 96% RA, Temp: 98.6°F",
+                        steps: [
+                            {
+                                question: "Most likely diagnosis?",
+                                options: ["GERD", "Anxiety", "STEMI", "Pulmonary embolism"],
+                                correct: 2,
+                                explanation: "Classic presentation of STEMI: crushing chest pain, radiation, diaphoresis, and demographics."
+                            },
+                            {
+                                question: "First intervention?",
+                                options: ["IV access", "12-lead EKG", "Chest X-ray", "Nitroglycerin"],
+                                correct: 1,
+                                explanation: "12-lead EKG within 10 minutes is the priority to confirm STEMI and guide treatment."
+                            },
+                            {
+                                question: "If EKG shows ST elevation in V2-V4, next step?",
+                                options: ["Heparin only", "Cath lab activation", "Thrombolytics", "Aspirin and observe"],
+                                correct: 1,
+                                explanation: "Anterior STEMI requires immediate cath lab activation for primary PCI within 90 minutes."
+                            }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        category: "Shortness of Breath",
+                        urgency: "high",
+                        presentation: "34F with sudden onset severe dyspnea and sharp chest pain. Recently returned from Europe. No fever.",
+                        vitals: "BP: 100/60, HR: 118, RR: 28, O2: 88% RA, Temp: 98.2°F",
+                        steps: [
+                            {
+                                question: "Top differential diagnosis?",
+                                options: ["Pneumonia", "Asthma exacerbation", "Pulmonary embolism", "Panic attack"],
+                                correct: 2,
+                                explanation: "Recent travel + sudden dyspnea + chest pain + tachycardia = PE until proven otherwise."
+                            },
+                            {
+                                question: "Most appropriate imaging?",
+                                options: ["Chest X-ray", "CT angiogram", "V/Q scan", "Echocardiogram"],
+                                correct: 1,
+                                explanation: "CTPA is first-line for PE diagnosis in hemodynamically stable patients with adequate renal function."
+                            },
+                            {
+                                question: "While awaiting imaging, best initial treatment?",
+                                options: ["Albuterol", "Heparin", "Morphine", "Wait for results"],
+                                correct: 1,
+                                explanation: "High clinical suspicion for PE warrants immediate anticoagulation unless contraindicated."
+                            }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        category: "Trauma",
+                        urgency: "high",
+                        presentation: "22M motorcycle vs car accident. Restless, pale. Complains of severe abdominal pain. Seatbelt mark across abdomen.",
+                        vitals: "BP: 90/60, HR: 120, RR: 24, O2: 94% RA, Temp: 97.8°F",
+                        steps: [
+                            {
+                                question: "Primary concern based on mechanism?",
+                                options: ["Femur fracture", "Head injury", "Intra-abdominal bleeding", "Pneumothorax"],
+                                correct: 2,
+                                explanation: "Hypotension + tachycardia + abdominal pain + mechanism = concerning for intra-abdominal hemorrhage."
+                            },
+                            {
+                                question: "Initial imaging priority?",
+                                options: ["CT head", "FAST exam", "Chest X-ray", "Pelvis X-ray"],
+                                correct: 1,
+                                explanation: "FAST exam quickly identifies free fluid/hemorrhage in unstable trauma patients."
+                            },
+                            {
+                                question: "If FAST is positive and patient remains hypotensive?",
+                                options: ["CT abdomen", "OR immediately", "More IV fluids", "Blood transfusion only"],
+                                correct: 1,
+                                explanation: "Positive FAST + hemodynamic instability = immediate surgical exploration, no delay for CT."
+                            }
+                        ]
+                    },
+                    {
+                        id: 4,
+                        category: "Stroke/Neuro",
+                        urgency: "high",
+                        presentation: "72F brought by daughter for sudden onset left-sided weakness and slurred speech. Symptoms started 2 hours ago. History of afib, not on anticoagulation.",
+                        vitals: "BP: 185/95, HR: 88 irregular, RR: 18, O2: 96% RA, Temp: 98.2°F",
+                        steps: [
+                            {
+                                question: "Most likely diagnosis?",
+                                options: ["Hemorrhagic stroke", "Ischemic stroke", "Seizure", "Hypoglycemia"],
+                                correct: 1,
+                                explanation: "Acute focal neurologic deficits + atrial fibrillation = high suspicion for ischemic stroke from cardioembolism."
+                            },
+                            {
+                                question: "First diagnostic test?",
+                                options: ["MRI brain", "CT head without contrast", "Carotid ultrasound", "EKG"],
+                                correct: 1,
+                                explanation: "Non-contrast CT head rapidly excludes hemorrhage and helps determine thrombolytic eligibility."
+                            },
+                            {
+                                question: "Patient is within time window, CT shows no hemorrhage. Next step?",
+                                options: ["Aspirin 325mg", "tPA administration", "Clopidogrel", "Heparin drip"],
+                                correct: 1,
+                                explanation: "IV tPA within 4.5 hours for eligible patients with acute ischemic stroke improves outcomes."
+                            }
+                        ]
+                    },
+                    {
+                        id: 5,
+                        category: "Cardiac Arrest",
+                        urgency: "high",
+                        presentation: "58M collapsed at gym. Bystander CPR started immediately. EMS arrived in 8 minutes, patient in VF on monitor.",
+                        vitals: "Pulseless, apneic",
+                        steps: [
+                            {
+                                question: "First intervention after confirming arrest?",
+                                options: ["Epinephrine 1mg", "Defibrillation", "Amiodarone 300mg", "Atropine 1mg"],
+                                correct: 1,
+                                explanation: "VF/VT is a shockable rhythm. Immediate defibrillation is the priority intervention."
+                            },
+                            {
+                                question: "After 2 minutes of CPR, still in VF. Next step?",
+                                options: ["Continue CPR only", "Second shock + epinephrine", "Amiodarone", "Check pulse"],
+                                correct: 1,
+                                explanation: "Second shock followed by epinephrine 1mg IV/IO after second shock per ACLS protocol."
+                            },
+                            {
+                                question: "After 4 shocks and 2 epinephrine doses, still in VF. Consider?",
+                                options: ["More epinephrine", "Amiodarone 300mg", "Lidocaine", "Stopping resuscitation"],
+                                correct: 1,
+                                explanation: "Amiodarone 300mg IV/IO for refractory VF/VT after adequate shocks and epinephrine."
+                            }
+                        ]
+                    },
+                    {
+                        id: 6,
+                        category: "Sepsis",
+                        urgency: "high",
+                        presentation: "78F nursing home resident with altered mental status x 1 day. Increased confusion, decreased oral intake. Staff reports foul-smelling urine.",
+                        vitals: "BP: 82/45, HR: 118, RR: 28, O2: 91% RA, Temp: 102.4°F",
+                        steps: [
+                            {
+                                question: "This presentation meets criteria for?",
+                                options: ["SIRS", "Sepsis", "Septic shock", "UTI only"],
+                                correct: 2,
+                                explanation: "Hypotension + altered mental status + suspected infection = septic shock requiring immediate intervention."
+                            },
+                            {
+                                question: "First priority intervention?",
+                                options: ["Blood cultures", "30mL/kg IV fluid bolus", "Antibiotics", "Urinalysis"],
+                                correct: 1,
+                                explanation: "Septic shock requires immediate fluid resuscitation - 30mL/kg (usually 2-3L) within first hour."
+                            },
+                            {
+                                question: "Antibiotic timing goal in septic shock?",
+                                options: ["Within 6 hours", "Within 3 hours", "Within 1 hour", "After culture results"],
+                                correct: 2,
+                                explanation: "Surviving Sepsis Campaign recommends antibiotics within 1 hour for septic shock patients."
+                            }
+                        ]
+                    },
+                    {
+                        id: 7,
+                        category: "Pediatric Emergency",
+                        urgency: "high",
+                        presentation: "2-year-old brought by parents for difficulty breathing and barking cough x 2 days. Worse at night. Low-grade fever. No drooling.",
+                        vitals: "BP: 90/55, HR: 140, RR: 36, O2: 94% RA, Temp: 100.8°F",
+                        steps: [
+                            {
+                                question: "Most likely diagnosis?",
+                                options: ["Epiglottitis", "Croup", "Foreign body aspiration", "Pneumonia"],
+                                correct: 1,
+                                explanation: "Barking cough + stridor + gradual onset + low fever = classic viral croup (laryngotracheobronchitis)."
+                            },
+                            {
+                                question: "First-line treatment?",
+                                options: ["Albuterol nebulizer", "Dexamethasone", "Racemic epinephrine", "Antibiotics"],
+                                correct: 1,
+                                explanation: "Dexamethasone 0.6mg/kg (max 10mg) reduces inflammation and symptom duration in croup."
+                            },
+                            {
+                                question: "If child has severe stridor at rest, add?",
+                                options: ["Heliox", "Racemic epinephrine", "Intubation", "More steroids"],
+                                correct: 1,
+                                explanation: "Racemic epinephrine nebulizer for severe croup with stridor at rest provides rapid symptom relief."
+                            }
+                        ]
+                    },
+                    {
+                        id: 8,
+                        category: "Psychiatric Emergency",
+                        urgency: "high",
+                        presentation: "28M brought by police for agitation and bizarre behavior. Hypervigilant, diaphoretic. Pupils dilated. Denies drug use but admits to 'not sleeping for 3 days'.",
+                        vitals: "BP: 165/105, HR: 135, RR: 24, O2: 98% RA, Temp: 101.8°F",
+                        steps: [
+                            {
+                                question: "Most likely cause of presentation?",
+                                options: ["Schizophrenia", "Stimulant intoxication", "Hyperthyroidism", "Mania"],
+                                correct: 1,
+                                explanation: "Agitation + hyperthermia + hypertension + mydriasis + sleep deprivation = stimulant toxidrome."
+                            },
+                            {
+                                question: "Priority concern with hyperthermia?",
+                                options: ["Seizures", "Rhabdomyolysis", "Dehydration", "All of the above"],
+                                correct: 3,
+                                explanation: "Stimulant-induced hyperthermia can cause seizures, rhabdomyolysis, and severe dehydration. Cooling is critical."
+                            },
+                            {
+                                question: "Best initial sedation choice?",
+                                options: ["Haloperidol", "Lorazepam", "Ketamine", "Olanzapine"],
+                                correct: 1,
+                                explanation: "Benzodiazepines are first-line for stimulant-induced agitation. Avoid antipsychotics (lower seizure threshold)."
+                            }
+                        ]
+                    },
+                    {
+                        id: 9,
+                        category: "Toxicology",
+                        urgency: "high",
+                        presentation: "19F college student found unconscious by roommate with empty acetaminophen bottle. Estimated ingestion 6 hours ago. Responsive to voice, vomited twice.",
+                        vitals: "BP: 115/75, HR: 88, RR: 16, O2: 99% RA, Temp: 98.6°F",
+                        steps: [
+                            {
+                                question: "Most important initial lab?",
+                                options: ["Liver enzymes", "Acetaminophen level", "Salicylate level", "ABG"],
+                                correct: 1,
+                                explanation: "Acetaminophen level at 4+ hours post-ingestion determines antidote need using Rumack-Matthew nomogram."
+                            },
+                            {
+                                question: "Level drawn at 6 hours shows toxicity. Treatment?",
+                                options: ["Activated charcoal", "N-acetylcysteine", "Hemodialysis", "Supportive care"],
+                                correct: 1,
+                                explanation: "N-acetylcysteine is the antidote for acetaminophen poisoning. Most effective within 8 hours of ingestion."
+                            },
+                            {
+                                question: "NAC loading dose?",
+                                options: ["70 mg/kg IV", "140 mg/kg PO", "150 mg/kg IV", "All are correct"],
+                                correct: 3,
+                                explanation: "NAC can be given PO (140 mg/kg) or IV (150 mg/kg loading dose). IV preferred for vomiting patients."
+                            }
+                        ]
+                    },
+                    {
+                        id: 10,
+                        category: "Shock",
+                        urgency: "high",
+                        presentation: "45M with 3-day history of chest pain, now presents with severe dyspnea. Unable to lie flat. Bilateral lower extremity edema. JVD present.",
+                        vitals: "BP: 88/60, HR: 110, RR: 32, O2: 88% RA, Temp: 98.4°F",
+                        steps: [
+                            {
+                                question: "Type of shock most likely?",
+                                options: ["Hypovolemic", "Cardiogenic", "Distributive", "Obstructive"],
+                                correct: 1,
+                                explanation: "CHF symptoms + hypotension + JVD + pulmonary edema = cardiogenic shock from pump failure."
+                            },
+                            {
+                                question: "Immediate intervention priority?",
+                                options: ["IV fluid bolus", "Norepinephrine", "BiPAP", "Furosemide"],
+                                correct: 2,
+                                explanation: "BiPAP improves oxygenation and reduces preload in acute cardiogenic pulmonary edema."
+                            },
+                            {
+                                question: "If BiPAP improves breathing but BP remains low?",
+                                options: ["More BiPAP", "Dobutamine", "Normal saline", "Nitroglycerin"],
+                                correct: 1,
+                                explanation: "Dobutamine increases contractility in cardiogenic shock. Avoid fluids (worsens pulmonary edema)."
+                            }
+                        ]
+                    },
+                    {
+                        id: 11,
+                        category: "Respiratory Emergency",
+                        urgency: "high",
+                        presentation: "55M with COPD history presents with worsening dyspnea x 2 days. Increased cough with purulent sputum. Using accessory muscles.",
+                        vitals: "BP: 140/85, HR: 105, RR: 28, O2: 86% RA, Temp: 101.2°F",
+                        steps: [
+                            {
+                                question: "Most likely diagnosis?",
+                                options: ["Pneumonia", "COPD exacerbation", "Pneumothorax", "Pulmonary embolism"],
+                                correct: 1,
+                                explanation: "COPD history + purulent sputum + fever + accessory muscle use = acute COPD exacerbation."
+                            },
+                            {
+                                question: "First-line treatment?",
+                                options: ["Albuterol + ipratropium", "Steroids", "Antibiotics", "BiPAP"],
+                                correct: 0,
+                                explanation: "Bronchodilators (albuterol + ipratropium) are first-line for acute COPD exacerbation."
+                            },
+                            {
+                                question: "Patient not improving with bronchodilators. Next step?",
+                                options: ["Intubation", "Prednisone 40mg", "BiPAP trial", "Magnesium sulfate"],
+                                correct: 2,
+                                explanation: "BiPAP reduces work of breathing and improves CO2 clearance in COPD exacerbation."
+                            }
+                        ]
+                    },
+                    {
+                        id: 12,
+                        category: "GI Emergency",
+                        urgency: "high",
+                        presentation: "68M with history of alcohol abuse presents with massive hematemesis. Appears pale and diaphoretic. Reports epigastric pain x 1 week.",
+                        vitals: "BP: 95/55, HR: 125, RR: 22, O2: 95% RA, Temp: 98.0°F",
+                        steps: [
+                            {
+                                question: "Most likely source of bleeding?",
+                                options: ["Peptic ulcer", "Esophageal varices", "Mallory-Weiss tear", "Boerhaave syndrome"],
+                                correct: 1,
+                                explanation: "Alcohol abuse + massive hematemesis + hemodynamic instability = esophageal varices until proven otherwise."
+                            },
+                            {
+                                question: "Initial management priority?",
+                                options: ["Urgent endoscopy", "Large bore IV access", "Octreotide", "Pantoprazole"],
+                                correct: 1,
+                                explanation: "Two large-bore IVs (16G or larger) for rapid volume resuscitation in major GI hemorrhage."
+                            },
+                            {
+                                question: "If refractory bleeding from varices?",
+                                options: ["More IV fluids", "Sengstaken-Blakemore tube", "Emergency surgery", "Higher PPI dose"],
+                                correct: 1,
+                                explanation: "Balloon tamponade (Sengstaken-Blakemore) can temporarily control variceal bleeding when endoscopy fails."
+                            }
+                        ]
+                    },
+                    {
+                        id: 13,
+                        category: "Infectious Disease",
+                        urgency: "high",
+                        presentation: "22F college student with severe headache, neck stiffness, and photophobia x 6 hours. Roommate had similar symptoms last week.",
+                        vitals: "BP: 110/70, HR: 115, RR: 20, O2: 98% RA, Temp: 102.8°F",
+                        steps: [
+                            {
+                                question: "Most concerning diagnosis?",
+                                options: ["Viral meningitis", "Bacterial meningitis", "Migraine", "Subarachnoid hemorrhage"],
+                                correct: 1,
+                                explanation: "Classic meningitis triad (headache, neck stiffness, fever) + close contact = bacterial meningitis concern."
+                            },
+                            {
+                                question: "First intervention before lumbar puncture?",
+                                options: ["CT head", "Blood cultures + antibiotics", "Dexamethasone", "IV fluids"],
+                                correct: 1,
+                                explanation: "Don't delay antibiotics for LP in suspected bacterial meningitis. Blood cultures then immediate antibiotics."
+                            },
+                            {
+                                question: "Empiric antibiotic choice for this age group?",
+                                options: ["Ampicillin + gentamicin", "Ceftriaxone + vancomycin", "Penicillin G", "Ceftazidime"],
+                                correct: 1,
+                                explanation: "Ceftriaxone + vancomycin covers S. pneumoniae and N. meningitidis in young adults."
+                            }
+                        ]
+                    },
+                    {
+                        id: 14,
+                        category: "Abdominal Pain",
+                        urgency: "medium",
+                        presentation: "35F with severe RUQ pain radiating to right shoulder. Pain started after eating fast food. Nausea and vomiting. Pain is colicky.",
+                        vitals: "BP: 125/80, HR: 95, RR: 18, O2: 99% RA, Temp: 99.4°F",
+                        steps: [
+                            {
+                                question: "Most likely diagnosis?",
+                                options: ["Acute cholecystitis", "Choledocholithiasis", "Hepatitis", "Peptic ulcer"],
+                                correct: 0,
+                                explanation: "RUQ pain + radiation to shoulder + triggered by fatty meal + Murphy's sign = acute cholecystitis."
+                            },
+                            {
+                                question: "Best initial imaging?",
+                                options: ["CT abdomen", "RUQ ultrasound", "HIDA scan", "MRCP"],
+                                correct: 1,
+                                explanation: "RUQ ultrasound is first-line for suspected gallbladder disease - evaluates stones, wall thickening, pericholecystic fluid."
+                            },
+                            {
+                                question: "If ultrasound shows stones, wall thickening, positive Murphy's sign?",
+                                options: ["Discharge with follow-up", "IV antibiotics", "Surgery consult", "Pain control only"],
+                                correct: 2,
+                                explanation: "Acute cholecystitis requires surgical consultation for cholecystectomy, preferably within 72 hours."
+                            }
+                        ]
+                    },
+                    {
+                        id: 15,
+                        category: "Syncope",
+                        urgency: "medium",
+                        presentation: "19F college athlete collapsed during basketball practice. Brief LOC, back to baseline quickly. No prodrome. Family history of sudden cardiac death in uncle at age 25.",
+                        vitals: "BP: 118/75, HR: 58, RR: 16, O2: 99% RA, Temp: 98.6°F",
+                        steps: [
+                            {
+                                question: "Most concerning red flag?",
+                                options: ["Young age", "Exertional syncope", "Family history", "Athletic activity"],
+                                correct: 1,
+                                explanation: "Exertional syncope in young athlete with family history of sudden death = high risk for hypertrophic cardiomyopathy."
+                            },
+                            {
+                                question: "Essential initial test?",
+                                options: ["Echocardiogram", "12-lead EKG", "Stress test", "Tilt table test"],
+                                correct: 1,
+                                explanation: "EKG screens for prolonged QT, Brugada pattern, delta waves, and signs of hypertrophic cardiomyopathy."
+                            },
+                            {
+                                question: "If EKG shows deep Q waves in lateral leads?",
+                                options: ["Discharge to primary care", "Cardiology consult", "Exercise restriction", "Echocardiogram stat"],
+                                correct: 3,
+                                explanation: "Deep Q waves + exertional syncope + family history = urgent echo to evaluate for hypertrophic cardiomyopathy."
+                            }
+                        ]
+                    }
+                ];
+                
                 this.loadCases();
                 this.render();
             }
