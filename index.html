@@ -5,363 +5,341 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergency Briefcase</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            background: #f8f9fa; 
+            color: #333; 
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
+        .container { 
+            max-width: 400px; 
+            margin: 0 auto; 
+            background: white; 
+            min-height: 100vh; 
+        }
+        .header { 
+            background: #dc2626; 
+            color: white; 
+            padding: 16px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 10; 
+        }
+        .header-top { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 8px; 
+        }
+        .title { 
+            font-size: 18px; 
+            font-weight: bold; 
+        }
+        .score { 
+            background: #991b1b; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 14px; 
+        }
+        .header-info { 
+            font-size: 14px; 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+        }
+        .urgency { 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+        }
+        .urgency.high { 
+            background: #fef2f2; 
+            color: #dc2626; 
+        }
+        .urgency.medium { 
+            background: #fefce8; 
+            color: #ca8a04; 
+        }
+        .urgency.low { 
+            background: #f0fdf4; 
+            color: #16a34a; 
+        }
+        .content { 
+            padding: 16px; 
+        }
+        .case-header { 
+            margin-bottom: 16px; 
+        }
+        .case-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            margin-bottom: 8px; 
+        }
+        .presentation { 
+            background: #f9fafb; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-bottom: 12px; 
+            font-size: 14px; 
+            line-height: 1.5; 
+        }
+        .vitals { 
+            background: #eff6ff; 
+            padding: 12px; 
+            border-radius: 8px; 
+        }
+        .vitals-label { 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #1e40af; 
+            margin-bottom: 4px; 
+        }
+        .vitals-text { 
+            font-size: 14px; 
+            color: #1e40af; 
+        }
+        .progress { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 16px; 
+        }
+        .progress-bar { 
+            height: 8px; 
+            flex: 1; 
+            border-radius: 4px; 
+            background: #e5e7eb; 
+        }
+        .progress-bar.active { 
+            background: #dc2626; 
+        }
+        .question { 
+            margin-bottom: 16px; 
+        }
+        .question-title { 
+            font-weight: 500; 
+            margin-bottom: 12px; 
+        }
+        .options { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        .option { 
+            width: 100%; 
+            padding: 12px; 
+            text-align: left; 
+            border: 1px solid #e5e7eb; 
+            border-radius: 8px; 
+            background: white; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            font-size: 14px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .option:hover:not(:disabled) { 
+            background: #fef2f2; 
+            border-color: #dc2626; 
+        }
+        .option.correct { 
+            background: #f0fdf4; 
+            border-color: #16a34a; 
+            color: #15803d; 
+        }
+        .option.incorrect { 
+            background: #fef2f2; 
+            border-color: #dc2626; 
+            color: #dc2626; 
+        }
+        .option.correct-answer { 
+            background: #f0fdf4; 
+            border-color: #16a34a; 
+            color: #15803d; 
+        }
+        .option:disabled { 
+            cursor: default; 
+        }
+        .explanation { 
+            background: #eff6ff; 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-bottom: 16px; 
+        }
+        .explanation-label { 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #1e40af; 
+            margin-bottom: 4px; 
+        }
+        .explanation-text { 
+            font-size: 14px; 
+            color: #1e40af; 
+            line-height: 1.5; 
+        }
+        .actions { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        .btn { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 8px; 
+            border: none; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .btn-primary { 
+            background: #dc2626; 
+            color: white; 
+        }
+        .btn-primary:hover { 
+            background: #991b1b; 
+        }
+        .btn-secondary { 
+            background: #f3f4f6; 
+            color: #374151; 
+        }
+        .btn-secondary:hover { 
+            background: #e5e7eb; 
+        }
+        .admin-toggle { 
+            background: none; 
+            border: none; 
+            color: white; 
+            padding: 4px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        .admin-toggle:hover { 
+            background: #991b1b; 
+        }
+        .admin-panel { 
+            background: #4b5563; 
+            color: white; 
+            padding: 16px; 
+        }
+        .admin-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 16px; 
+        }
+        .case-item { 
+            border: 1px solid #e5e7eb; 
+            border-radius: 8px; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            background: white; 
+            color: #333; 
+        }
+        .case-actions { 
+            display: flex; 
+            gap: 8px; 
+            margin-top: 8px; 
+        }
+        .btn-small { 
+            padding: 6px 12px; 
+            font-size: 12px; 
+            border-radius: 4px; 
+            border: none; 
+            cursor: pointer; 
+        }
+        .btn-edit { 
+            background: #fef2f2; 
+            color: #dc2626; 
+        }
+        .btn-delete { 
+            background: #fef2f2; 
+            color: #dc2626; 
+        }
+        .btn-add { 
+            background: #dc2626; 
+            color: white; 
+            margin-bottom: 16px; 
+        }
+        .form-group { 
+            margin-bottom: 16px; 
+        }
+        .form-label { 
+            display: block; 
+            font-size: 14px; 
+            font-weight: 500; 
+            margin-bottom: 4px; 
+            color: #374151; 
+        }
+        .form-input { 
+            width: 100%; 
+            padding: 8px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            box-sizing: border-box; 
+        }
+        .form-textarea { 
+            width: 100%; 
+            padding: 8px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            resize: vertical; 
+            min-height: 80px; 
+            box-sizing: border-box; 
+        }
+        .line-clamp-2 { 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+            overflow: hidden; 
+        }
+        .password-form { 
+            background: white; 
+            color: #333; 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-bottom: 16px; 
+        }
+        .error { 
+            color: #dc2626; 
+            font-size: 12px; 
+            margin-top: 4px; 
+        }
+        .case-editor {
+            background: white;
             color: #333;
-        }
-        
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-        }
-        
-        .header {
-            background: #dc2626;
-            color: white;
-            padding: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .header-title {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .score {
-            background: #991b1b;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .header-info {
-            font-size: 14px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        
-        .urgency {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-        
-        .urgency.high { background: #fef2f2; color: #dc2626; }
-        .urgency.medium { background: #fefce8; color: #ca8a04; }
-        .urgency.low { background: #f0fdf4; color: #16a34a; }
-        
-        .content {
-            padding: 16px;
-        }
-        
-        .case-header {
-            margin-bottom: 16px;
-        }
-        
-        .case-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .presentation {
-            background: #f9fafb;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .vitals {
-            background: #eff6ff;
-            padding: 12px;
-            border-radius: 8px;
-        }
-        
-        .vitals-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 4px;
-        }
-        
-        .vitals-text {
-            font-size: 14px;
-            color: #1e40af;
-        }
-        
-        .progress {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            flex: 1;
-            border-radius: 4px;
-            background: #e5e7eb;
-        }
-        
-        .progress-bar.active {
-            background: #dc2626;
-        }
-        
-        .question {
-            margin-bottom: 16px;
-        }
-        
-        .question-title {
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .option {
-            width: 100%;
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .option:hover:not(:disabled) {
-            background: #fef2f2;
-            border-color: #dc2626;
-        }
-        
-        .option.correct {
-            background: #f0fdf4;
-            border-color: #16a34a;
-            color: #15803d;
-        }
-        
-        .option.incorrect {
-            background: #fef2f2;
-            border-color: #dc2626;
-            color: #dc2626;
-        }
-        
-        .option.correct-answer {
-            background: #f0fdf4;
-            border-color: #16a34a;
-            color: #15803d;
-        }
-        
-        .option:disabled {
-            cursor: default;
-        }
-        
-        .explanation {
-            background: #eff6ff;
             padding: 16px;
             border-radius: 8px;
             margin-bottom: 16px;
         }
-        
-        .explanation-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 4px;
-        }
-        
-        .explanation-text {
-            font-size: 14px;
-            color: #1e40af;
-            line-height: 1.5;
-        }
-        
-        .actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: #dc2626;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #991b1b;
-        }
-        
-        .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-        }
-        
-        .btn-secondary:hover {
-            background: #e5e7eb;
-        }
-        
-        .admin-toggle {
-            background: none;
-            border: none;
-            color: white;
-            padding: 4px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .admin-toggle:hover {
-            background: #991b1b;
-        }
-        
-        .admin-panel {
-            background: #4b5563;
-            color: white;
-            padding: 16px;
-        }
-        
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .case-item {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            background: white;
-            color: #333;
-        }
-        
-        .case-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-edit {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-        
-        .btn-delete {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-        
-        .btn-add {
-            background: #dc2626;
-            color: white;
-            margin-bottom: 16px;
-        }
-        
-        .form-group {
-            margin-bottom: 16px;
-        }
-        
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-            color: #374151;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        
-        .form-textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 80px;
-        }
-        
         .step-editor {
             border: 1px solid #d1d5db;
             border-radius: 6px;
             padding: 12px;
             margin-bottom: 12px;
+            background: #f9fafb;
         }
-        
         .step-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            font-weight: 600;
         }
-        
         .option-row {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
         }
-        
         .option-radio {
             margin: 0;
         }
-        
         .option-input {
             flex: 1;
             padding: 6px;
@@ -369,9 +347,19 @@
             border-radius: 4px;
             font-size: 14px;
         }
-        
-        .hidden {
-            display: none !important;
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #991b1b;
+        }
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #15803d;
         }
     </style>
 </head>
@@ -381,6 +369,467 @@
     </div>
 
     <script>
+        // Emergency Medicine Cases - Comprehensive Library
+        const defaultCases = [
+            // CARDIOLOGY
+            {
+                id: 1,
+                category: "Cardiology - STEMI",
+                urgency: "high",
+                presentation: "67M presents with crushing chest pain radiating to left arm and jaw. Started 45 min ago while watching TV. Diaphoretic, anxious, nauseous. PMH: HTN, DM, smoking 2ppd x30 years.",
+                vitals: "BP: 160/95, HR: 102, RR: 22, O2: 96% RA, Temp: 98.6°F, Weight: 85kg",
+                steps: [
+                    { 
+                        question: "EKG shows 4mm ST elevation V1-V4, reciprocal depression II/III/aVF. Door time 15min. Best strategy?", 
+                        options: ["Thrombolytics", "Primary PCI", "Medical management", "Emergent CABG"], 
+                        correct: 1, 
+                        explanation: "Primary PCI preferred if door-to-balloon <90min. Large anterior STEMI needs immediate catheterization." 
+                    },
+                    { 
+                        question: "During PCI, patient develops cardiogenic shock (CI <2.2, PCWP >18). Next intervention?", 
+                        options: ["More fluids", "Intra-aortic balloon pump", "Vasopressors only", "Mechanical ventilation"], 
+                        correct: 1, 
+                        explanation: "IABP provides mechanical circulatory support in cardiogenic shock, improves coronary perfusion." 
+                    },
+                    { 
+                        question: "Post-PCI, troponin peaks at 45 ng/mL. Patient stable. Discharge medications must include?", 
+                        options: ["Aspirin only", "Dual antiplatelet + statin", "DAPT + ACE + beta-blocker + statin", "Anticoagulation only"], 
+                        correct: 2, 
+                        explanation: "Guideline-directed medical therapy: DAPT x12mo, ACE/ARB, beta-blocker, high-intensity statin." 
+                    }
+                ]
+            },
+            {
+                id: 2,
+                category: "Cardiology - Heart Failure",
+                urgency: "high",
+                presentation: "58F with known ischemic cardiomyopathy (EF 20%) presents with acute decompensation. Unable to lie flat, bilateral crackles, cool extremities, altered mental status.",
+                vitals: "BP: 85/60, HR: 110, RR: 28, O2: 85% RA, Temp: 97.8°F, CVP: 18mmHg",
+                steps: [
+                    { 
+                        question: "Forrester classification for this patient with cool extremities and crackles?", 
+                        options: ["Cool/wet (cardiogenic shock)", "Warm/wet (volume overload)", "Cool/dry (hypovolemia)", "Warm/dry (compensated)"], 
+                        correct: 0, 
+                        explanation: "Cool extremities = hypoperfusion. Crackles + elevated CVP = volume overload. Cool/wet = cardiogenic shock." 
+                    },
+                    { 
+                        question: "Initial management priority in cardiogenic shock?", 
+                        options: ["Aggressive diuresis", "Inotropic support", "Fluid challenge", "Vasodilators"], 
+                        correct: 1, 
+                        explanation: "Cardiogenic shock requires inotropic support (dobutamine, milrinone) to improve cardiac output." 
+                    }
+                ]
+            },
+            
+            // PULMONOLOGY
+            {
+                id: 3,
+                category: "Pulmonology - Massive PE",
+                urgency: "high",
+                presentation: "52M sudden severe dyspnea and chest pain after 14-hour flight. Collapsed at customs, syncope witnessed. PMH: Factor V Leiden, recent knee surgery 3 weeks ago.",
+                vitals: "BP: 75/45, HR: 135, RR: 32, O2: 78% on 15L NRB, Temp: 98.2°F",
+                steps: [
+                    { 
+                        question: "Hemodynamically unstable suspected massive PE. Immediate bedside assessment priority?", 
+                        options: ["CT angiogram", "Bedside echocardiogram", "D-dimer", "ABG"], 
+                        correct: 1, 
+                        explanation: "Bedside echo can immediately assess RV strain, guide treatment decisions without delaying care." 
+                    },
+                    { 
+                        question: "Echo shows severe RV dilatation, McConnell's sign. Recent surgery 3 weeks ago. Thrombolysis?", 
+                        options: ["Contraindicated due to recent surgery", "Benefits outweigh risks in massive PE", "Wait for surgical team", "Use reduced dose"], 
+                        correct: 1, 
+                        explanation: "Massive PE with hemodynamic instability may justify thrombolysis despite recent surgery." 
+                    }
+                ]
+            },
+            {
+                id: 4,
+                category: "Pulmonology - Tension Pneumothorax",
+                urgency: "high",
+                presentation: "28M motorcyclist after collision. Severe respiratory distress, tracheal deviation to left, absent breath sounds on right, JVD, hypotensive.",
+                vitals: "BP: 70/40, HR: 140, RR: 35, O2: 78% on BVM, Temp: 98.2°F",
+                steps: [
+                    { 
+                        question: "Clinical findings suggest tension pneumothorax. Immediate life-saving intervention?", 
+                        options: ["Chest X-ray first", "Needle decompression 2nd ICS midclavicular", "Chest tube insertion", "Intubation"], 
+                        correct: 1, 
+                        explanation: "Tension pneumothorax is clinical diagnosis. Immediate needle decompression, then chest tube." 
+                    },
+                    { 
+                        question: "After needle decompression, patient improves. Next step?", 
+                        options: ["Repeat needle decompression", "Chest tube 5th ICS anterior axillary", "Observe and monitor", "VATS procedure"], 
+                        correct: 1, 
+                        explanation: "After needle decompression, definitive treatment is chest tube placement." 
+                    }
+                ]
+            },
+            
+            // NEUROLOGY
+            {
+                id: 5,
+                category: "Neurology - Status Epilepticus",
+                urgency: "high",
+                presentation: "32M generalized tonic-clonic seizure x15 minutes. No IV access yet. PMH: epilepsy on phenytoin. Wife reports medication compliance issues.",
+                vitals: "BP: 160/95, HR: 120, RR: 24, O2: 90% on NRB, Temp: 99.8°F",
+                steps: [
+                    { 
+                        question: "Status epilepticus definition and immediate priority?", 
+                        options: ["Seizure >5min, get IV access", "Seizure >10min, give benzos", "Seizure >5min, give benzos IM/IN", "Seizure >30min, intubate"], 
+                        correct: 2, 
+                        explanation: "Status epilepticus: seizure >5min. Immediate: IM/IN midazolam or rectal diazepam if no IV." 
+                    },
+                    { 
+                        question: "IM midazolam given, seizure continues. IV established. Next medication?", 
+                        options: ["Lorazepam 4mg IV", "Diazepam 10mg IV", "Phenytoin 20mg/kg", "Valproic acid 40mg/kg"], 
+                        correct: 0, 
+                        explanation: "Second-line: lorazepam 0.1mg/kg (max 4mg) IV. More effective than diazepam for status." 
+                    }
+                ]
+            },
+            {
+                id: 6,
+                category: "Neurology - Acute Stroke",
+                urgency: "high",
+                presentation: "73F sudden onset left-sided weakness and slurred speech 2 hours ago. PMH: atrial fibrillation on warfarin, HTN. NIHSS 18.",
+                vitals: "BP: 185/100, HR: 88 irregular, RR: 16, O2: 96% RA, Temp: 98.4°F",
+                steps: [
+                    { 
+                        question: "NIHSS 18 indicates stroke severity and likely vessel involvement?", 
+                        options: ["Minor stroke, small vessel", "Moderate stroke, MCA branch", "Severe stroke, large vessel occlusion", "Stroke mimic"], 
+                        correct: 2, 
+                        explanation: "NIHSS >15-20 suggests large vessel occlusion (LVO). Consider mechanical thrombectomy." 
+                    },
+                    { 
+                        question: "Patient on warfarin, INR 2.8. IV tPA eligibility?", 
+                        options: ["Eligible if INR <1.7", "Contraindicated due to INR >1.7", "Give reduced dose tPA", "Reverse warfarin first"], 
+                        correct: 1, 
+                        explanation: "INR >1.7 is contraindication to IV tPA due to bleeding risk. Consider mechanical thrombectomy." 
+                    }
+                ]
+            },
+            
+            // ENDOCRINOLOGY
+            {
+                id: 7,
+                category: "Endocrinology - Severe DKA",
+                urgency: "high",
+                presentation: "19F T1DM presents comatose. Fruity breath, Kussmaul respirations. Ran out of insulin 3 days ago. Roommate found her this morning.",
+                vitals: "BP: 90/60, HR: 130, RR: 35, O2: 98% RA, Temp: 97.8°F",
+                steps: [
+                    { 
+                        question: "Labs: glucose 580, pH 6.9, HCO3 6, anion gap 28, ketones 4+. DKA severity?", 
+                        options: ["Mild DKA", "Moderate DKA", "Severe DKA", "HHS"], 
+                        correct: 2, 
+                        explanation: "Severe DKA: pH <7.0, HCO3 <10, large ketones. Glucose >250 but can be normal in euglycemic DKA." 
+                    },
+                    { 
+                        question: "Initial K+ 3.2 mEq/L. Insulin protocol adjustment needed?", 
+                        options: ["Give insulin first", "40 mEq KCl in first liter", "Hold insulin until K+ >3.3", "80 mEq KCl in first liter"], 
+                        correct: 2, 
+                        explanation: "If K+ <3.3, hold insulin and give 40 mEq KCl until K+ >3.3 to prevent hypokalemia." 
+                    },
+                    { 
+                        question: "After 4hrs: glucose 180, pH 7.15, anion gap 18. Next step?", 
+                        options: ["Continue same insulin rate", "Reduce insulin rate", "Add D5 1/2 NS", "Stop insulin"], 
+                        correct: 2, 
+                        explanation: "When glucose <250, add dextrose to prevent hypoglycemia while continuing insulin to clear ketones." 
+                    }
+                ]
+            },
+            {
+                id: 8,
+                category: "Endocrinology - Thyroid Storm",
+                urgency: "high",
+                presentation: "45M with Graves' disease, stopped methimazole due to rash. Fever 104°F, confusion, atrial fibrillation with RVR, heart failure symptoms.",
+                vitals: "BP: 90/50, HR: 165 irregular, RR: 28, O2: 88% RA, Temp: 104.2°F",
+                steps: [
+                    { 
+                        question: "Clinical presentation suggests thyroid storm. First-line antithyroid therapy?", 
+                        options: ["Methimazole 40mg PO", "PTU 600mg loading dose", "Iodine solution first", "Propranolol only"], 
+                        correct: 1, 
+                        explanation: "PTU preferred in storm: blocks synthesis AND peripheral T4→T3 conversion." 
+                    },
+                    { 
+                        question: "Timing of iodine administration relative to antithyroid drugs?", 
+                        options: ["Give iodine first", "Simultaneous administration", "PTU first, then iodine 1-2hr later", "Avoid iodine"], 
+                        correct: 2, 
+                        explanation: "Give PTU first, then iodine 1-2 hours later to prevent organification into more hormone." 
+                    }
+                ]
+            },
+            
+            // INFECTIOUS DISEASE
+            {
+                id: 9,
+                category: "Infectious Disease - Septic Shock",
+                urgency: "high",
+                presentation: "68F nursing home resident with altered mental status, hypotension. Foley catheter x2 weeks, cloudy urine. PMH: DM, dementia.",
+                vitals: "BP: 78/45, HR: 120, RR: 28, O2: 90% RA, Temp: 101.8°F",
+                steps: [
+                    { 
+                        question: "qSOFA score: altered mental status (1), SBP <100 (1), RR ≥22 (1). Interpretation?", 
+                        options: ["qSOFA 2, low risk", "qSOFA 3, high risk", "qSOFA 2, moderate risk", "Need full SOFA"], 
+                        correct: 1, 
+                        explanation: "qSOFA ≥2 = high risk for poor outcomes. This patient has qSOFA 3." 
+                    },
+                    { 
+                        question: "Hour-1 bundle components?", 
+                        options: ["Lactate + blood cultures", "Antibiotics + 30ml/kg fluids", "Vasopressors if needed", "All of the above"], 
+                        correct: 3, 
+                        explanation: "Hour-1 bundle: lactate, blood cultures, antibiotics, fluids, vasopressors if needed." 
+                    }
+                ]
+            },
+            {
+                id: 10,
+                category: "Infectious Disease - Meningitis",
+                urgency: "high",
+                presentation: "22F college student with severe headache, neck stiffness, photophobia, fever x6 hours. Petechial rash on extremities. Roommate had similar illness.",
+                vitals: "BP: 85/50, HR: 125, RR: 26, O2: 94% RA, Temp: 102.8°F",
+                steps: [
+                    { 
+                        question: "Classic triad of bacterial meningitis: fever, neck stiffness, altered mental status. What percentage present with all three?", 
+                        options: ["90-95%", "60-70%", "44%", "25%"], 
+                        correct: 2, 
+                        explanation: "Only 44% of patients with bacterial meningitis present with the classic triad." 
+                    },
+                    { 
+                        question: "Petechial rash most strongly suggests which organism?", 
+                        options: ["Streptococcus pneumoniae", "Neisseria meningitidis", "Haemophilus influenzae", "Listeria"], 
+                        correct: 1, 
+                        explanation: "Petechial/purpuric rash is classic for meningococcal meningitis (N. meningitidis)." 
+                    }
+                ]
+            },
+            
+            // GASTROENTEROLOGY
+            {
+                id: 11,
+                category: "Gastroenterology - Upper GI Bleeding",
+                urgency: "high",
+                presentation: "56M with cirrhosis presents with massive hematemesis and melena. Confused, pale, tachycardic. Known varices, Child-Pugh B.",
+                vitals: "BP: 85/55, HR: 125, RR: 24, O2: 92% RA, Temp: 98.8°F",
+                steps: [
+                    { 
+                        question: "Hemoglobin transfusion target in cirrhotic patients with variceal bleeding?", 
+                        options: ["Hgb >10 g/dL (liberal)", "Hgb 7-9 g/dL (restrictive)", "Hgb >8 g/dL (moderate)", "No specific target"], 
+                        correct: 1, 
+                        explanation: "Restrictive transfusion strategy (Hgb 7-9) reduces portal pressure and rebleeding risk." 
+                    },
+                    { 
+                        question: "Pharmacologic therapy to reduce portal pressure before endoscopy?", 
+                        options: ["Octreotide bolus + infusion", "Vasopressin", "Terlipressin", "Propranolol"], 
+                        correct: 0, 
+                        explanation: "Octreotide reduces splanchnic blood flow and portal pressure. Start immediately." 
+                    }
+                ]
+            },
+            {
+                id: 12,
+                category: "Gastroenterology - Acute Pancreatitis",
+                urgency: "medium",
+                presentation: "42F severe epigastric pain radiating to back, nausea, vomiting x12 hours. Pain started after large meal. PMH: gallstones, BMI 35.",
+                vitals: "BP: 110/70, HR: 105, RR: 20, O2: 96% RA, Temp: 100.4°F",
+                steps: [
+                    { 
+                        question: "Labs: lipase 850 U/L, ALT 245, total bilirubin 3.2. Most likely etiology?", 
+                        options: ["Alcohol-induced", "Gallstone pancreatitis", "Hypertriglyceridemia", "Idiopathic"], 
+                        correct: 1, 
+                        explanation: "Elevated transaminases (ALT >150) and bilirubin suggest gallstone pancreatitis." 
+                    },
+                    { 
+                        question: "Fluid resuscitation strategy in acute pancreatitis?", 
+                        options: ["Conservative fluids", "Aggressive LR 250-500ml/hr", "Goal-directed balanced crystalloids", "Colloids preferred"], 
+                        correct: 2, 
+                        explanation: "Goal-directed fluid therapy with balanced crystalloids. Avoid over-resuscitation." 
+                    }
+                ]
+            },
+            
+            // EMERGENCY MEDICINE
+            {
+                id: 13,
+                category: "Emergency Medicine - Anaphylaxis",
+                urgency: "high",
+                presentation: "28F stung by bee 15 minutes ago. Rapidly developing generalized urticaria, facial swelling, wheezing, feeling of 'impending doom'.",
+                vitals: "BP: 85/55, HR: 130, RR: 28, O2: 88% RA, Temp: 98.6°F",
+                steps: [
+                    { 
+                        question: "Clinical presentation involves which organ systems confirming anaphylaxis?", 
+                        options: ["Skin + respiratory", "Cardiovascular + respiratory", "Skin + cardiovascular + respiratory", "GI + respiratory"], 
+                        correct: 2, 
+                        explanation: "Skin (urticaria, angioedema), respiratory (wheezing), cardiovascular (hypotension). Classic anaphylaxis." 
+                    },
+                    { 
+                        question: "First-line treatment for anaphylaxis?", 
+                        options: ["Diphenhydramine 50mg IV", "Methylprednisolone 125mg IV", "Epinephrine 0.3mg IM", "Albuterol nebulizer"], 
+                        correct: 2, 
+                        explanation: "Epinephrine IM is first-line for anaphylaxis. Do not delay for IV access or other medications." 
+                    }
+                ]
+            },
+            {
+                id: 14,
+                category: "Emergency Medicine - Aortic Dissection",
+                urgency: "high",
+                presentation: "58M sudden onset severe 'tearing' chest pain radiating to back. Pain 10/10, started while lifting weights. PMH: HTN poorly controlled.",
+                vitals: "BP: 180/110 (R arm), 155/90 (L arm), HR: 95, RR: 20, O2: 97% RA",
+                steps: [
+                    { 
+                        question: "Blood pressure differential between arms suggests?", 
+                        options: ["Measurement error", "Type A dissection involving arch", "Type B dissection", "Subclavian steal"], 
+                        correct: 1, 
+                        explanation: "BP differential >20mmHg suggests Type A dissection with arch vessel involvement. Surgical emergency." 
+                    },
+                    { 
+                        question: "Most appropriate initial imaging for stable patient?", 
+                        options: ["Chest X-ray", "CT angiogram chest/abdomen/pelvis", "Transthoracic echo", "Aortogram"], 
+                        correct: 1, 
+                        explanation: "CTA is first-line imaging for stable patients with suspected dissection. Fast, accurate, available." 
+                    }
+                ]
+            },
+            
+            // TOXICOLOGY
+            {
+                id: 15,
+                category: "Toxicology - Acetaminophen Overdose",
+                urgency: "high",
+                presentation: "19F found with empty acetaminophen bottle. Estimated ingestion 8 grams 6 hours ago. Currently asymptomatic but concerned about liver damage.",
+                vitals: "BP: 120/75, HR: 88, RR: 16, O2: 98% RA, Temp: 98.4°F",
+                steps: [
+                    { 
+                        question: "Acetaminophen level 6 hours post-ingestion: 180 μg/mL. Using Rumack-Matthew nomogram?", 
+                        options: ["Below treatment line", "Above treatment line - treat", "Need 4-hour level", "Nomogram not applicable"], 
+                        correct: 1, 
+                        explanation: "Level 180 μg/mL at 6 hours is above treatment line (150 μg/mL). Risk for hepatotoxicity." 
+                    },
+                    { 
+                        question: "NAC (N-acetylcysteine) most effective when given within?", 
+                        options: ["8 hours of ingestion", "12 hours of ingestion", "24 hours of ingestion", "48 hours of ingestion"], 
+                        correct: 0, 
+                        explanation: "NAC most effective within 8 hours. Still beneficial up to 24-48 hours but efficacy decreases." 
+                    }
+                ]
+            },
+            
+            // PSYCHIATRY
+            {
+                id: 16,
+                category: "Psychiatry - Agitated Delirium",
+                urgency: "medium",
+                presentation: "76M post-op day 3 after hip fracture repair. Confused, agitated, pulling at lines. Sees 'bugs on walls'. Normal mentally before surgery.",
+                vitals: "BP: 145/85, HR: 105, RR: 22, O2: 94% on 2L, Temp: 99.2°F",
+                steps: [
+                    { 
+                        question: "CAM-ICU: acute onset (yes), inattention (yes), altered LOC (yes), disorganized thinking (yes). Diagnosis?", 
+                        options: ["Dementia", "Delirium", "Depression", "Psychosis"], 
+                        correct: 1, 
+                        explanation: "Positive CAM-ICU = delirium. Acute onset, fluctuating course, inattention are key." 
+                    },
+                    { 
+                        question: "Most appropriate first-line intervention?", 
+                        options: ["Physical restraints", "Sitter/family presence", "Sedation", "Isolation"], 
+                        correct: 1, 
+                        explanation: "Non-pharmacologic first: reorientation, familiar faces, normalize sleep-wake cycle." 
+                    }
+                ]
+            },
+            
+            // ORTHOPEDICS
+            {
+                id: 17,
+                category: "Orthopedics - Compartment Syndrome",
+                urgency: "high",
+                presentation: "25M motorcyclist with closed tibia fracture 4 hours ago. Increasing pain despite reduction and morphine. Pain with passive toe extension.",
+                vitals: "BP: 125/80, HR: 95, RR: 18, O2: 97% RA, Temp: 98.6°F",
+                steps: [
+                    { 
+                        question: "Most sensitive early finding in compartment syndrome?", 
+                        options: ["Absent pulses", "Pain out of proportion", "Paralysis", "Paresthesias"], 
+                        correct: 1, 
+                        explanation: "Pain out of proportion to exam, especially with passive stretch, is earliest finding." 
+                    },
+                    { 
+                        question: "Compartment pressure 45mmHg, diastolic BP 80mmHg. Delta pressure?", 
+                        options: ["35mmHg - concerning", "45mmHg - normal", "80mmHg - high", "Cannot calculate"], 
+                        correct: 0, 
+                        explanation: "Delta pressure = diastolic BP - compartment pressure = 35mmHg. <30mmHg indicates fasciotomy." 
+                    }
+                ]
+            },
+            
+            // NEPHROLOGY
+            {
+                id: 18,
+                category: "Nephrology - Acute Kidney Injury",
+                urgency: "medium",
+                presentation: "65M post-op day 2 after major surgery. Urine output 200mL in 8 hours. Creatinine 1.1→2.8. Receiving NSAIDs, ACE inhibitor.",
+                vitals: "BP: 95/60, HR: 95, RR: 18, O2: 94% RA, Temp: 98.6°F",
+                steps: [
+                    { 
+                        question: "KDIGO AKI staging: Cr 1.1→2.8 (2.5x increase) + oliguria. AKI stage?", 
+                        options: ["Stage 1 (mild)", "Stage 2 (moderate)", "Stage 3 (severe)", "No AKI"], 
+                        correct: 2, 
+                        explanation: "Stage 3 AKI: Cr increase >3x baseline OR oliguria <0.3ml/kg/hr x24hr. High mortality." 
+                    },
+                    { 
+                        question: "Most likely etiology in this post-surgical patient?", 
+                        options: ["Pre-renal (volume depletion)", "Intrinsic renal (ATN)", "Post-renal (obstruction)", "Drug-induced"], 
+                        correct: 1, 
+                        explanation: "Post-surgical AKI usually ATN from hypotension, nephrotoxins, or ischemia-reperfusion." 
+                    }
+                ]
+            },
+            
+            // HEMATOLOGY/ONCOLOGY
+            {
+                id: 19,
+                category: "Hematology - Neutropenic Fever",
+                urgency: "high",
+                presentation: "45M with AML, day 14 post-chemotherapy, fever and rigors. No localizing symptoms. ANC 100 cells/μL. Central line x10 days.",
+                vitals: "BP: 100/65, HR: 110, RR: 22, O2: 95% RA, Temp: 101.8°F",
+                steps: [
+                    { 
+                        question: "Definition of neutropenic fever?", 
+                        options: ["ANC <500 + fever >100.4°F", "ANC <1000 + fever", "WBC <1000 + fever", "Any fever in cancer"], 
+                        correct: 0, 
+                        explanation: "Neutropenic fever: ANC <500 (or expected to drop) + temp ≥100.4°F or sustained ≥100°F." 
+                    },
+                    { 
+                        question: "Empiric antibiotic choice for high-risk neutropenic fever with central line?", 
+                        options: ["Ceftriaxone", "Cefepime", "Vancomycin + cefepime", "Meropenem"], 
+                        correct: 2, 
+                        explanation: "Central line + high-risk: vancomycin (MRSA/coag-neg staph) + antipseudomonal beta-lactam." 
+                    }
+                ]
+            },
+            
+            // RHEUMATOLOGY
+            {
+                id: 20,
+                category: "Rheumatology - Giant Cell Arteritis",
+                urgency: "high",
+                presentation: "72F severe new-onset headache, jaw claudication, transient vision loss in right eye. PMH: polymyalgia rheumatica. Tender temporal arteries.",
+                vitals: "BP: 140/85, HR: 82, RR: 16, O2: 97% RA, Temp: 99.6°F",
+                steps: [
+                    { 
+                        question: "Clinical presentation most concerning for which emergency complication?", 
+                        options: ["Stroke", "Permanent vision loss", "Myocardial infarction", "Aortic dissection"], 
+                        correct: 1, 
+                        explanation: "Vision loss in GCA can progress to permanent blindness within hours-days. Emergency." 
+                    },
+                    { 
+                        question: "Immediate treatment to prevent vision loss?", 
+                        options: ["Prednisone 60mg daily", "Methylprednisolone 1g IV daily x3", "Methotrexate", "Aspirin"], 
+                        correct: 1, 
+                        explanation: "Vision involvement requires pulse IV methylprednisolone 1g daily x3 days." 
+                    }
+                ]
+            }
+        ];
+
         class EmCaseTrainer {
             constructor() {
                 this.currentCase = 0;
@@ -391,1248 +840,147 @@
                 this.showAdmin = false;
                 this.editingCase = null;
                 this.isAuthenticated = false;
-                this.adminPassword = "EM2024!"; // Change this to your preferred password
-                
-                this.defaultCases = [
-                    {
-                        id: 1,
-                        category: "Chest Pain",
-                        urgency: "high",
-                        presentation: "67M presents with crushing chest pain radiating to left arm. Started 45 min ago while watching TV. Diaphoretic, anxious.",
-                        vitals: "BP: 160/95, HR: 102, RR: 22, O2: 96% RA, Temp: 98.6°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["GERD", "Anxiety", "STEMI", "Pulmonary embolism"],
-                                correct: 2,
-                                explanation: "Classic presentation of STEMI: crushing chest pain, radiation, diaphoresis, and demographics."
-                            },
-                            {
-                                question: "First intervention?",
-                                options: ["IV access", "12-lead EKG", "Chest X-ray", "Nitroglycerin"],
-                                correct: 1,
-                                explanation: "12-lead EKG within 10 minutes is the priority to confirm STEMI and guide treatment."
-                            },
-                            {
-                                question: "If EKG shows ST elevation in V2-V4, next step?",
-                                options: ["Heparin only", "Cath lab activation", "Thrombolytics", "Aspirin and observe"],
-                                correct: 1,
-                                explanation: "Anterior STEMI requires immediate cath lab activation for primary PCI within 90 minutes."
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        category: "Shortness of Breath",
-                        urgency: "high",
-                        presentation: "34F with sudden onset severe dyspnea and sharp chest pain. Recently returned from Europe. No fever.",
-                        vitals: "BP: 100/60, HR: 118, RR: 28, O2: 88% RA, Temp: 98.2°F",
-                        steps: [
-                            {
-                                question: "Top differential diagnosis?",
-                                options: ["Pneumonia", "Asthma exacerbation", "Pulmonary embolism", "Panic attack"],
-                                correct: 2,
-                                explanation: "Recent travel + sudden dyspnea + chest pain + tachycardia = PE until proven otherwise."
-                            },
-                            {
-                                question: "Most appropriate imaging?",
-                                options: ["Chest X-ray", "CT angiogram", "V/Q scan", "Echocardiogram"],
-                                correct: 1,
-                                explanation: "CTPA is first-line for PE diagnosis in hemodynamically stable patients with adequate renal function."
-                            },
-                            {
-                                question: "While awaiting imaging, best initial treatment?",
-                                options: ["Albuterol", "Heparin", "Morphine", "Wait for results"],
-                                correct: 1,
-                                explanation: "High clinical suspicion for PE warrants immediate anticoagulation unless contraindicated."
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        category: "Trauma",
-                        urgency: "high",
-                        presentation: "22M motorcycle vs car accident. Restless, pale. Complains of severe abdominal pain. Seatbelt mark across abdomen.",
-                        vitals: "BP: 90/60, HR: 120, RR: 24, O2: 94% RA, Temp: 97.8°F",
-                        steps: [
-                            {
-                                question: "Primary concern based on mechanism?",
-                                options: ["Femur fracture", "Head injury", "Intra-abdominal bleeding", "Pneumothorax"],
-                                correct: 2,
-                                explanation: "Hypotension + tachycardia + abdominal pain + mechanism = concerning for intra-abdominal hemorrhage."
-                            },
-                            {
-                                question: "Initial imaging priority?",
-                                options: ["CT head", "FAST exam", "Chest X-ray", "Pelvis X-ray"],
-                                correct: 1,
-                                explanation: "FAST exam quickly identifies free fluid/hemorrhage in unstable trauma patients."
-                            },
-                            {
-                                question: "If FAST is positive and patient remains hypotensive?",
-                                options: ["CT abdomen", "OR immediately", "More IV fluids", "Blood transfusion only"],
-                                correct: 1,
-                                explanation: "Positive FAST + hemodynamic instability = immediate surgical exploration, no delay for CT."
-                            }
-                        ]
-                    },
-                    {
-                        id: 4,
-                        category: "Stroke/Neuro",
-                        urgency: "high",
-                        presentation: "72F brought by daughter for sudden onset left-sided weakness and slurred speech. Symptoms started 2 hours ago. History of afib, not on anticoagulation.",
-                        vitals: "BP: 185/95, HR: 88 irregular, RR: 18, O2: 96% RA, Temp: 98.2°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Hemorrhagic stroke", "Ischemic stroke", "Seizure", "Hypoglycemia"],
-                                correct: 1,
-                                explanation: "Acute focal neurologic deficits + atrial fibrillation = high suspicion for ischemic stroke from cardioembolism."
-                            },
-                            {
-                                question: "First diagnostic test?",
-                                options: ["MRI brain", "CT head without contrast", "Carotid ultrasound", "EKG"],
-                                correct: 1,
-                                explanation: "Non-contrast CT head rapidly excludes hemorrhage and helps determine thrombolytic eligibility."
-                            },
-                            {
-                                question: "Patient is within time window, CT shows no hemorrhage. Next step?",
-                                options: ["Aspirin 325mg", "tPA administration", "Clopidogrel", "Heparin drip"],
-                                correct: 1,
-                                explanation: "IV tPA within 4.5 hours for eligible patients with acute ischemic stroke improves outcomes."
-                            }
-                        ]
-                    },
-                    {
-                        id: 5,
-                        category: "Cardiac Arrest",
-                        urgency: "high",
-                        presentation: "58M collapsed at gym. Bystander CPR started immediately. EMS arrived in 8 minutes, patient in VF on monitor.",
-                        vitals: "Pulseless, apneic",
-                        steps: [
-                            {
-                                question: "First intervention after confirming arrest?",
-                                options: ["Epinephrine 1mg", "Defibrillation", "Amiodarone 300mg", "Atropine 1mg"],
-                                correct: 1,
-                                explanation: "VF/VT is a shockable rhythm. Immediate defibrillation is the priority intervention."
-                            },
-                            {
-                                question: "After 2 minutes of CPR, still in VF. Next step?",
-                                options: ["Continue CPR only", "Second shock + epinephrine", "Amiodarone", "Check pulse"],
-                                correct: 1,
-                                explanation: "Second shock followed by epinephrine 1mg IV/IO after second shock per ACLS protocol."
-                            },
-                            {
-                                question: "After 4 shocks and 2 epinephrine doses, still in VF. Consider?",
-                                options: ["More epinephrine", "Amiodarone 300mg", "Lidocaine", "Stopping resuscitation"],
-                                correct: 1,
-                                explanation: "Amiodarone 300mg IV/IO for refractory VF/VT after adequate shocks and epinephrine."
-                            }
-                        ]
-                    },
-                    {
-                        id: 6,
-                        category: "Sepsis",
-                        urgency: "high",
-                        presentation: "78F nursing home resident with altered mental status x 1 day. Increased confusion, decreased oral intake. Staff reports foul-smelling urine.",
-                        vitals: "BP: 82/45, HR: 118, RR: 28, O2: 91% RA, Temp: 102.4°F",
-                        steps: [
-                            {
-                                question: "This presentation meets criteria for?",
-                                options: ["SIRS", "Sepsis", "Septic shock", "UTI only"],
-                                correct: 2,
-                                explanation: "Hypotension + altered mental status + suspected infection = septic shock requiring immediate intervention."
-                            },
-                            {
-                                question: "First priority intervention?",
-                                options: ["Blood cultures", "30mL/kg IV fluid bolus", "Antibiotics", "Urinalysis"],
-                                correct: 1,
-                                explanation: "Septic shock requires immediate fluid resuscitation - 30mL/kg (usually 2-3L) within first hour."
-                            },
-                            {
-                                question: "Antibiotic timing goal in septic shock?",
-                                options: ["Within 6 hours", "Within 3 hours", "Within 1 hour", "After culture results"],
-                                correct: 2,
-                                explanation: "Surviving Sepsis Campaign recommends antibiotics within 1 hour for septic shock patients."
-                            }
-                        ]
-                    },
-                    {
-                        id: 7,
-                        category: "Pediatric Emergency",
-                        urgency: "high",
-                        presentation: "2-year-old brought by parents for difficulty breathing and barking cough x 2 days. Worse at night. Low-grade fever. No drooling.",
-                        vitals: "BP: 90/55, HR: 140, RR: 36, O2: 94% RA, Temp: 100.8°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Epiglottitis", "Croup", "Foreign body aspiration", "Pneumonia"],
-                                correct: 1,
-                                explanation: "Barking cough + stridor + gradual onset + low fever = classic viral croup (laryngotracheobronchitis)."
-                            },
-                            {
-                                question: "First-line treatment?",
-                                options: ["Albuterol nebulizer", "Dexamethasone", "Racemic epinephrine", "Antibiotics"],
-                                correct: 1,
-                                explanation: "Dexamethasone 0.6mg/kg (max 10mg) reduces inflammation and symptom duration in croup."
-                            },
-                            {
-                                question: "If child has severe stridor at rest, add?",
-                                options: ["Heliox", "Racemic epinephrine", "Intubation", "More steroids"],
-                                correct: 1,
-                                explanation: "Racemic epinephrine nebulizer for severe croup with stridor at rest provides rapid symptom relief."
-                            }
-                        ]
-                    },
-                    {
-                        id: 8,
-                        category: "Psychiatric Emergency",
-                        urgency: "high",
-                        presentation: "28M brought by police for agitation and bizarre behavior. Hypervigilant, diaphoretic. Pupils dilated. Denies drug use but admits to 'not sleeping for 3 days'.",
-                        vitals: "BP: 165/105, HR: 135, RR: 24, O2: 98% RA, Temp: 101.8°F",
-                        steps: [
-                            {
-                                question: "Most likely cause of presentation?",
-                                options: ["Schizophrenia", "Stimulant intoxication", "Hyperthyroidism", "Mania"],
-                                correct: 1,
-                                explanation: "Agitation + hyperthermia + hypertension + mydriasis + sleep deprivation = stimulant toxidrome."
-                            },
-                            {
-                                question: "Priority concern with hyperthermia?",
-                                options: ["Seizures", "Rhabdomyolysis", "Dehydration", "All of the above"],
-                                correct: 3,
-                                explanation: "Stimulant-induced hyperthermia can cause seizures, rhabdomyolysis, and severe dehydration. Cooling is critical."
-                            },
-                            {
-                                question: "Best initial sedation choice?",
-                                options: ["Haloperidol", "Lorazepam", "Ketamine", "Olanzapine"],
-                                correct: 1,
-                                explanation: "Benzodiazepines are first-line for stimulant-induced agitation. Avoid antipsychotics (lower seizure threshold)."
-                            }
-                        ]
-                    },
-                    {
-                        id: 9,
-                        category: "Toxicology",
-                        urgency: "high",
-                        presentation: "19F college student found unconscious by roommate with empty acetaminophen bottle. Estimated ingestion 6 hours ago. Responsive to voice, vomited twice.",
-                        vitals: "BP: 115/75, HR: 88, RR: 16, O2: 99% RA, Temp: 98.6°F",
-                        steps: [
-                            {
-                                question: "Most important initial lab?",
-                                options: ["Liver enzymes", "Acetaminophen level", "Salicylate level", "ABG"],
-                                correct: 1,
-                                explanation: "Acetaminophen level at 4+ hours post-ingestion determines antidote need using Rumack-Matthew nomogram."
-                            },
-                            {
-                                question: "Level drawn at 6 hours shows toxicity. Treatment?",
-                                options: ["Activated charcoal", "N-acetylcysteine", "Hemodialysis", "Supportive care"],
-                                correct: 1,
-                                explanation: "N-acetylcysteine is the antidote for acetaminophen poisoning. Most effective within 8 hours of ingestion."
-                            },
-                            {
-                                question: "NAC loading dose?",
-                                options: ["70 mg/kg IV", "140 mg/kg PO", "150 mg/kg IV", "All are correct"],
-                                correct: 3,
-                                explanation: "NAC can be given PO (140 mg/kg) or IV (150 mg/kg loading dose). IV preferred for vomiting patients."
-                            }
-                        ]
-                    },
-                    {
-                        id: 10,
-                        category: "Shock",
-                        urgency: "high",
-                        presentation: "45M with 3-day history of chest pain, now presents with severe dyspnea. Unable to lie flat. Bilateral lower extremity edema. JVD present.",
-                        vitals: "BP: 88/60, HR: 110, RR: 32, O2: 88% RA, Temp: 98.4°F",
-                        steps: [
-                            {
-                                question: "Type of shock most likely?",
-                                options: ["Hypovolemic", "Cardiogenic", "Distributive", "Obstructive"],
-                                correct: 1,
-                                explanation: "CHF symptoms + hypotension + JVD + pulmonary edema = cardiogenic shock from pump failure."
-                            },
-                            {
-                                question: "Immediate intervention priority?",
-                                options: ["IV fluid bolus", "Norepinephrine", "BiPAP", "Furosemide"],
-                                correct: 2,
-                                explanation: "BiPAP improves oxygenation and reduces preload in acute cardiogenic pulmonary edema."
-                            },
-                            {
-                                question: "If BiPAP improves breathing but BP remains low?",
-                                options: ["More BiPAP", "Dobutamine", "Normal saline", "Nitroglycerin"],
-                                correct: 1,
-                                explanation: "Dobutamine increases contractility in cardiogenic shock. Avoid fluids (worsens pulmonary edema)."
-                            }
-                        ]
-                    },
-                    {
-                        id: 11,
-                        category: "Respiratory Emergency",
-                        urgency: "high",
-                        presentation: "55M with COPD history presents with worsening dyspnea x 2 days. Increased cough with purulent sputum. Using accessory muscles.",
-                        vitals: "BP: 140/85, HR: 105, RR: 28, O2: 86% RA, Temp: 101.2°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Pneumonia", "COPD exacerbation", "Pneumothorax", "Pulmonary embolism"],
-                                correct: 1,
-                                explanation: "COPD history + purulent sputum + fever + accessory muscle use = acute COPD exacerbation."
-                            },
-                            {
-                                question: "First-line treatment?",
-                                options: ["Albuterol + ipratropium", "Steroids", "Antibiotics", "BiPAP"],
-                                correct: 0,
-                                explanation: "Bronchodilators (albuterol + ipratropium) are first-line for acute COPD exacerbation."
-                            },
-                            {
-                                question: "Patient not improving with bronchodilators. Next step?",
-                                options: ["Intubation", "Prednisone 40mg", "BiPAP trial", "Magnesium sulfate"],
-                                correct: 2,
-                                explanation: "BiPAP reduces work of breathing and improves CO2 clearance in COPD exacerbation."
-                            }
-                        ]
-                    },
-                    {
-                        id: 12,
-                        category: "GI Emergency",
-                        urgency: "high",
-                        presentation: "68M with history of alcohol abuse presents with massive hematemesis. Appears pale and diaphoretic. Reports epigastric pain x 1 week.",
-                        vitals: "BP: 95/55, HR: 125, RR: 22, O2: 95% RA, Temp: 98.0°F",
-                        steps: [
-                            {
-                                question: "Most likely source of bleeding?",
-                                options: ["Peptic ulcer", "Esophageal varices", "Mallory-Weiss tear", "Boerhaave syndrome"],
-                                correct: 1,
-                                explanation: "Alcohol abuse + massive hematemesis + hemodynamic instability = esophageal varices until proven otherwise."
-                            },
-                            {
-                                question: "Initial management priority?",
-                                options: ["Urgent endoscopy", "Large bore IV access", "Octreotide", "Pantoprazole"],
-                                correct: 1,
-                                explanation: "Two large-bore IVs (16G or larger) for rapid volume resuscitation in major GI hemorrhage."
-                            },
-                            {
-                                question: "If refractory bleeding from varices?",
-                                options: ["More IV fluids", "Sengstaken-Blakemore tube", "Emergency surgery", "Higher PPI dose"],
-                                correct: 1,
-                                explanation: "Balloon tamponade (Sengstaken-Blakemore) can temporarily control variceal bleeding when endoscopy fails."
-                            }
-                        ]
-                    },
-                    {
-                        id: 13,
-                        category: "Infectious Disease",
-                        urgency: "high",
-                        presentation: "22F college student with severe headache, neck stiffness, and photophobia x 6 hours. Roommate had similar symptoms last week.",
-                        vitals: "BP: 110/70, HR: 115, RR: 20, O2: 98% RA, Temp: 102.8°F",
-                        steps: [
-                            {
-                                question: "Most concerning diagnosis?",
-                                options: ["Viral meningitis", "Bacterial meningitis", "Migraine", "Subarachnoid hemorrhage"],
-                                correct: 1,
-                                explanation: "Classic meningitis triad (headache, neck stiffness, fever) + close contact = bacterial meningitis concern."
-                            },
-                            {
-                                question: "First intervention before lumbar puncture?",
-                                options: ["CT head", "Blood cultures + antibiotics", "Dexamethasone", "IV fluids"],
-                                correct: 1,
-                                explanation: "Don't delay antibiotics for LP in suspected bacterial meningitis. Blood cultures then immediate antibiotics."
-                            },
-                            {
-                                question: "Empiric antibiotic choice for this age group?",
-                                options: ["Ampicillin + gentamicin", "Ceftriaxone + vancomycin", "Penicillin G", "Ceftazidime"],
-                                correct: 1,
-                                explanation: "Ceftriaxone + vancomycin covers S. pneumoniae and N. meningitidis in young adults."
-                            }
-                        ]
-                    },
-                    {
-                        id: 14,
-                        category: "Abdominal Pain",
-                        urgency: "medium",
-                        presentation: "35F with severe RUQ pain radiating to right shoulder. Pain started after eating fast food. Nausea and vomiting. Pain is colicky.",
-                        vitals: "BP: 125/80, HR: 95, RR: 18, O2: 99% RA, Temp: 99.4°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Acute cholecystitis", "Choledocholithiasis", "Hepatitis", "Peptic ulcer"],
-                                correct: 0,
-                                explanation: "RUQ pain + radiation to shoulder + triggered by fatty meal + Murphy's sign = acute cholecystitis."
-                            },
-                            {
-                                question: "Best initial imaging?",
-                                options: ["CT abdomen", "RUQ ultrasound", "HIDA scan", "MRCP"],
-                                correct: 1,
-                                explanation: "RUQ ultrasound is first-line for suspected gallbladder disease - evaluates stones, wall thickening, pericholecystic fluid."
-                            },
-                            {
-                                question: "If ultrasound shows stones, wall thickening, positive Murphy's sign?",
-                                options: ["Discharge with follow-up", "IV antibiotics", "Surgery consult", "Pain control only"],
-                                correct: 2,
-                                explanation: "Acute cholecystitis requires surgical consultation for cholecystectomy, preferably within 72 hours."
-                            }
-                        ]
-                    },
-                    {
-                        id: 15,
-                        category: "Syncope",
-                        urgency: "medium",
-                        presentation: "19F college athlete collapsed during basketball practice. Brief LOC, back to baseline quickly. No prodrome. Family history of sudden cardiac death in uncle at age 25.",
-                        vitals: "BP: 118/75, HR: 58, RR: 16, O2: 99% RA, Temp: 98.6°F",
-                        steps: [
-                            {
-                                question: "Most concerning red flag?",
-                                options: ["Young age", "Exertional syncope", "Family history", "Athletic activity"],
-                                correct: 1,
-                                explanation: "Exertional syncope in young athlete with family history of sudden death = high risk for hypertrophic cardiomyopathy."
-                            },
-                            {
-                                question: "Essential initial test?",
-                                options: ["Echocardiogram", "12-lead EKG", "Stress test", "Tilt table test"],
-                                correct: 1,
-                                explanation: "EKG screens for prolonged QT, Brugada pattern, delta waves, and signs of hypertrophic cardiomyopathy."
-                            },
-                            {
-                                question: "If EKG shows deep Q waves in lateral leads?",
-                                options: ["Discharge to primary care", "Cardiology consult", "Exercise restriction", "Echocardiogram stat"],
-                                correct: 3,
-                                explanation: "Deep Q waves + exertional syncope + family history = urgent echo to evaluate for hypertrophic cardiomyopathy."
-                            }
-                        ]
-                    }
-                ];
-                
-                this.defaultCases = [
-                    {
-                        id: 1,
-                        category: "Chest Pain",
-                        urgency: "high",
-                        presentation: "67M presents with crushing chest pain radiating to left arm. Started 45 min ago while watching TV. Diaphoretic, anxious.",
-                        vitals: "BP: 160/95, HR: 102, RR: 22, O2: 96% RA, Temp: 98.6°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["GERD", "Anxiety", "STEMI", "Pulmonary embolism"],
-                                correct: 2,
-                                explanation: "Classic presentation of STEMI: crushing chest pain, radiation, diaphoresis, and demographics."
-                            },
-                            {
-                                question: "First intervention?",
-                                options: ["IV access", "12-lead EKG", "Chest X-ray", "Nitroglycerin"],
-                                correct: 1,
-                                explanation: "12-lead EKG within 10 minutes is the priority to confirm STEMI and guide treatment."
-                            },
-                            {
-                                question: "If EKG shows ST elevation in V2-V4, next step?",
-                                options: ["Heparin only", "Cath lab activation", "Thrombolytics", "Aspirin and observe"],
-                                correct: 1,
-                                explanation: "Anterior STEMI requires immediate cath lab activation for primary PCI within 90 minutes."
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        category: "Shortness of Breath",
-                        urgency: "high",
-                        presentation: "34F with sudden onset severe dyspnea and sharp chest pain. Recently returned from Europe. No fever.",
-                        vitals: "BP: 100/60, HR: 118, RR: 28, O2: 88% RA, Temp: 98.2°F",
-                        steps: [
-                            {
-                                question: "Top differential diagnosis?",
-                                options: ["Pneumonia", "Asthma exacerbation", "Pulmonary embolism", "Panic attack"],
-                                correct: 2,
-                                explanation: "Recent travel + sudden dyspnea + chest pain + tachycardia = PE until proven otherwise."
-                            },
-                            {
-                                question: "Most appropriate imaging?",
-                                options: ["Chest X-ray", "CT angiogram", "V/Q scan", "Echocardiogram"],
-                                correct: 1,
-                                explanation: "CTPA is first-line for PE diagnosis in hemodynamically stable patients with adequate renal function."
-                            },
-                            {
-                                question: "While awaiting imaging, best initial treatment?",
-                                options: ["Albuterol", "Heparin", "Morphine", "Wait for results"],
-                                correct: 1,
-                                explanation: "High clinical suspicion for PE warrants immediate anticoagulation unless contraindicated."
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        category: "Trauma",
-                        urgency: "high",
-                        presentation: "22M motorcycle vs car accident. Restless, pale. Complains of severe abdominal pain. Seatbelt mark across abdomen.",
-                        vitals: "BP: 90/60, HR: 120, RR: 24, O2: 94% RA, Temp: 97.8°F",
-                        steps: [
-                            {
-                                question: "Primary concern based on mechanism?",
-                                options: ["Femur fracture", "Head injury", "Intra-abdominal bleeding", "Pneumothorax"],
-                                correct: 2,
-                                explanation: "Hypotension + tachycardia + abdominal pain + mechanism = concerning for intra-abdominal hemorrhage."
-                            },
-                            {
-                                question: "Initial imaging priority?",
-                                options: ["CT head", "FAST exam", "Chest X-ray", "Pelvis X-ray"],
-                                correct: 1,
-                                explanation: "FAST exam quickly identifies free fluid/hemorrhage in unstable trauma patients."
-                            },
-                            {
-                                question: "If FAST is positive and patient remains hypotensive?",
-                                options: ["CT abdomen", "OR immediately", "More IV fluids", "Blood transfusion only"],
-                                correct: 1,
-                                explanation: "Positive FAST + hemodynamic instability = immediate surgical exploration, no delay for CT."
-                            }
-                        ]
-                    },
-                    {
-                        id: 4,
-                        category: "Stroke/Neuro",
-                        urgency: "high",
-                        presentation: "72F brought by daughter for sudden onset left-sided weakness and slurred speech. Symptoms started 2 hours ago. History of afib, not on anticoagulation.",
-                        vitals: "BP: 185/95, HR: 88 irregular, RR: 18, O2: 96% RA, Temp: 98.2°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Hemorrhagic stroke", "Ischemic stroke", "Seizure", "Hypoglycemia"],
-                                correct: 1,
-                                explanation: "Acute focal neurologic deficits + atrial fibrillation = high suspicion for ischemic stroke from cardioembolism."
-                            },
-                            {
-                                question: "First diagnostic test?",
-                                options: ["MRI brain", "CT head without contrast", "Carotid ultrasound", "EKG"],
-                                correct: 1,
-                                explanation: "Non-contrast CT head rapidly excludes hemorrhage and helps determine thrombolytic eligibility."
-                            },
-                            {
-                                question: "Patient is within time window, CT shows no hemorrhage. Next step?",
-                                options: ["Aspirin 325mg", "tPA administration", "Clopidogrel", "Heparin drip"],
-                                correct: 1,
-                                explanation: "IV tPA within 4.5 hours for eligible patients with acute ischemic stroke improves outcomes."
-                            }
-                        ]
-                    },
-                    {
-                        id: 5,
-                        category: "Cardiac Arrest",
-                        urgency: "high",
-                        presentation: "58M collapsed at gym. Bystander CPR started immediately. EMS arrived in 8 minutes, patient in VF on monitor.",
-                        vitals: "Pulseless, apneic",
-                        steps: [
-                            {
-                                question: "First intervention after confirming arrest?",
-                                options: ["Epinephrine 1mg", "Defibrillation", "Amiodarone 300mg", "Atropine 1mg"],
-                                correct: 1,
-                                explanation: "VF/VT is a shockable rhythm. Immediate defibrillation is the priority intervention."
-                            },
-                            {
-                                question: "After 2 minutes of CPR, still in VF. Next step?",
-                                options: ["Continue CPR only", "Second shock + epinephrine", "Amiodarone", "Check pulse"],
-                                correct: 1,
-                                explanation: "Second shock followed by epinephrine 1mg IV/IO after second shock per ACLS protocol."
-                            },
-                            {
-                                question: "After 4 shocks and 2 epinephrine doses, still in VF. Consider?",
-                                options: ["More epinephrine", "Amiodarone 300mg", "Lidocaine", "Stopping resuscitation"],
-                                correct: 1,
-                                explanation: "Amiodarone 300mg IV/IO for refractory VF/VT after adequate shocks and epinephrine."
-                            }
-                        ]
-                    },
-                    {
-                        id: 6,
-                        category: "Sepsis",
-                        urgency: "high",
-                        presentation: "78F nursing home resident with altered mental status x 1 day. Increased confusion, decreased oral intake. Staff reports foul-smelling urine.",
-                        vitals: "BP: 82/45, HR: 118, RR: 28, O2: 91% RA, Temp: 102.4°F",
-                        steps: [
-                            {
-                                question: "This presentation meets criteria for?",
-                                options: ["SIRS", "Sepsis", "Septic shock", "UTI only"],
-                                correct: 2,
-                                explanation: "Hypotension + altered mental status + suspected infection = septic shock requiring immediate intervention."
-                            },
-                            {
-                                question: "First priority intervention?",
-                                options: ["Blood cultures", "30mL/kg IV fluid bolus", "Antibiotics", "Urinalysis"],
-                                correct: 1,
-                                explanation: "Septic shock requires immediate fluid resuscitation - 30mL/kg (usually 2-3L) within first hour."
-                            },
-                            {
-                                question: "Antibiotic timing goal in septic shock?",
-                                options: ["Within 6 hours", "Within 3 hours", "Within 1 hour", "After culture results"],
-                                correct: 2,
-                                explanation: "Surviving Sepsis Campaign recommends antibiotics within 1 hour for septic shock patients."
-                            }
-                        ]
-                    },
-                    {
-                        id: 7,
-                        category: "Pediatric Emergency",
-                        urgency: "high",
-                        presentation: "2-year-old brought by parents for difficulty breathing and barking cough x 2 days. Worse at night. Low-grade fever. No drooling.",
-                        vitals: "BP: 90/55, HR: 140, RR: 36, O2: 94% RA, Temp: 100.8°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Epiglottitis", "Croup", "Foreign body aspiration", "Pneumonia"],
-                                correct: 1,
-                                explanation: "Barking cough + stridor + gradual onset + low fever = classic viral croup (laryngotracheobronchitis)."
-                            },
-                            {
-                                question: "First-line treatment?",
-                                options: ["Albuterol nebulizer", "Dexamethasone", "Racemic epinephrine", "Antibiotics"],
-                                correct: 1,
-                                explanation: "Dexamethasone 0.6mg/kg (max 10mg) reduces inflammation and symptom duration in croup."
-                            },
-                            {
-                                question: "If child has severe stridor at rest, add?",
-                                options: ["Heliox", "Racemic epinephrine", "Intubation", "More steroids"],
-                                correct: 1,
-                                explanation: "Racemic epinephrine nebulizer for severe croup with stridor at rest provides rapid symptom relief."
-                            }
-                        ]
-                    },
-                    {
-                        id: 8,
-                        category: "Psychiatric Emergency",
-                        urgency: "high",
-                        presentation: "28M brought by police for agitation and bizarre behavior. Hypervigilant, diaphoretic. Pupils dilated. Denies drug use but admits to 'not sleeping for 3 days'.",
-                        vitals: "BP: 165/105, HR: 135, RR: 24, O2: 98% RA, Temp: 101.8°F",
-                        steps: [
-                            {
-                                question: "Most likely cause of presentation?",
-                                options: ["Schizophrenia", "Stimulant intoxication", "Hyperthyroidism", "Mania"],
-                                correct: 1,
-                                explanation: "Agitation + hyperthermia + hypertension + mydriasis + sleep deprivation = stimulant toxidrome."
-                            },
-                            {
-                                question: "Priority concern with hyperthermia?",
-                                options: ["Seizures", "Rhabdomyolysis", "Dehydration", "All of the above"],
-                                correct: 3,
-                                explanation: "Stimulant-induced hyperthermia can cause seizures, rhabdomyolysis, and severe dehydration. Cooling is critical."
-                            },
-                            {
-                                question: "Best initial sedation choice?",
-                                options: ["Haloperidol", "Lorazepam", "Ketamine", "Olanzapine"],
-                                correct: 1,
-                                explanation: "Benzodiazepines are first-line for stimulant-induced agitation. Avoid antipsychotics (lower seizure threshold)."
-                            }
-                        ]
-                    },
-                    {
-                        id: 9,
-                        category: "Toxicology",
-                        urgency: "high",
-                        presentation: "19F college student found unconscious by roommate with empty acetaminophen bottle. Estimated ingestion 6 hours ago. Responsive to voice, vomited twice.",
-                        vitals: "BP: 115/75, HR: 88, RR: 16, O2: 99% RA, Temp: 98.6°F",
-                        steps: [
-                            {
-                                question: "Most important initial lab?",
-                                options: ["Liver enzymes", "Acetaminophen level", "Salicylate level", "ABG"],
-                                correct: 1,
-                                explanation: "Acetaminophen level at 4+ hours post-ingestion determines antidote need using Rumack-Matthew nomogram."
-                            },
-                            {
-                                question: "Level drawn at 6 hours shows toxicity. Treatment?",
-                                options: ["Activated charcoal", "N-acetylcysteine", "Hemodialysis", "Supportive care"],
-                                correct: 1,
-                                explanation: "N-acetylcysteine is the antidote for acetaminophen poisoning. Most effective within 8 hours of ingestion."
-                            },
-                            {
-                                question: "NAC loading dose?",
-                                options: ["70 mg/kg IV", "140 mg/kg PO", "150 mg/kg IV", "All are correct"],
-                                correct: 3,
-                                explanation: "NAC can be given PO (140 mg/kg) or IV (150 mg/kg loading dose). IV preferred for vomiting patients."
-                            }
-                        ]
-                    },
-                    {
-                        id: 10,
-                        category: "Shock",
-                        urgency: "high",
-                        presentation: "45M with 3-day history of chest pain, now presents with severe dyspnea. Unable to lie flat. Bilateral lower extremity edema. JVD present.",
-                        vitals: "BP: 88/60, HR: 110, RR: 32, O2: 88% RA, Temp: 98.4°F",
-                        steps: [
-                            {
-                                question: "Type of shock most likely?",
-                                options: ["Hypovolemic", "Cardiogenic", "Distributive", "Obstructive"],
-                                correct: 1,
-                                explanation: "CHF symptoms + hypotension + JVD + pulmonary edema = cardiogenic shock from pump failure."
-                            },
-                            {
-                                question: "Immediate intervention priority?",
-                                options: ["IV fluid bolus", "Norepinephrine", "BiPAP", "Furosemide"],
-                                correct: 2,
-                                explanation: "BiPAP improves oxygenation and reduces preload in acute cardiogenic pulmonary edema."
-                            },
-                            {
-                                question: "If BiPAP improves breathing but BP remains low?",
-                                options: ["More BiPAP", "Dobutamine", "Normal saline", "Nitroglycerin"],
-                                correct: 1,
-                                explanation: "Dobutamine increases contractility in cardiogenic shock. Avoid fluids (worsens pulmonary edema)."
-                            }
-                        ]
-                    },
-                    {
-                        id: 11,
-                        category: "Respiratory Emergency",
-                        urgency: "high",
-                        presentation: "55M with COPD history presents with worsening dyspnea x 2 days. Increased cough with purulent sputum. Using accessory muscles.",
-                        vitals: "BP: 140/85, HR: 105, RR: 28, O2: 86% RA, Temp: 101.2°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Pneumonia", "COPD exacerbation", "Pneumothorax", "Pulmonary embolism"],
-                                correct: 1,
-                                explanation: "COPD history + purulent sputum + fever + accessory muscle use = acute COPD exacerbation."
-                            },
-                            {
-                                question: "First-line treatment?",
-                                options: ["Albuterol + ipratropium", "Steroids", "Antibiotics", "BiPAP"],
-                                correct: 0,
-                                explanation: "Bronchodilators (albuterol + ipratropium) are first-line for acute COPD exacerbation."
-                            },
-                            {
-                                question: "Patient not improving with bronchodilators. Next step?",
-                                options: ["Intubation", "Prednisone 40mg", "BiPAP trial", "Magnesium sulfate"],
-                                correct: 2,
-                                explanation: "BiPAP reduces work of breathing and improves CO2 clearance in COPD exacerbation."
-                            }
-                        ]
-                    },
-                    {
-                        id: 12,
-                        category: "GI Emergency",
-                        urgency: "high",
-                        presentation: "68M with history of alcohol abuse presents with massive hematemesis. Appears pale and diaphoretic. Reports epigastric pain x 1 week.",
-                        vitals: "BP: 95/55, HR: 125, RR: 22, O2: 95% RA, Temp: 98.0°F",
-                        steps: [
-                            {
-                                question: "Most likely source of bleeding?",
-                                options: ["Peptic ulcer", "Esophageal varices", "Mallory-Weiss tear", "Boerhaave syndrome"],
-                                correct: 1,
-                                explanation: "Alcohol abuse + massive hematemesis + hemodynamic instability = esophageal varices until proven otherwise."
-                            },
-                            {
-                                question: "Initial management priority?",
-                                options: ["Urgent endoscopy", "Large bore IV access", "Octreotide", "Pantoprazole"],
-                                correct: 1,
-                                explanation: "Two large-bore IVs (16G or larger) for rapid volume resuscitation in major GI hemorrhage."
-                            },
-                            {
-                                question: "If refractory bleeding from varices?",
-                                options: ["More IV fluids", "Sengstaken-Blakemore tube", "Emergency surgery", "Higher PPI dose"],
-                                correct: 1,
-                                explanation: "Balloon tamponade (Sengstaken-Blakemore) can temporarily control variceal bleeding when endoscopy fails."
-                            }
-                        ]
-                    },
-                    {
-                        id: 13,
-                        category: "Infectious Disease",
-                        urgency: "high",
-                        presentation: "22F college student with severe headache, neck stiffness, and photophobia x 6 hours. Roommate had similar symptoms last week.",
-                        vitals: "BP: 110/70, HR: 115, RR: 20, O2: 98% RA, Temp: 102.8°F",
-                        steps: [
-                            {
-                                question: "Most concerning diagnosis?",
-                                options: ["Viral meningitis", "Bacterial meningitis", "Migraine", "Subarachnoid hemorrhage"],
-                                correct: 1,
-                                explanation: "Classic meningitis triad (headache, neck stiffness, fever) + close contact = bacterial meningitis concern."
-                            },
-                            {
-                                question: "First intervention before lumbar puncture?",
-                                options: ["CT head", "Blood cultures + antibiotics", "Dexamethasone", "IV fluids"],
-                                correct: 1,
-                                explanation: "Don't delay antibiotics for LP in suspected bacterial meningitis. Blood cultures then immediate antibiotics."
-                            },
-                            {
-                                question: "Empiric antibiotic choice for this age group?",
-                                options: ["Ampicillin + gentamicin", "Ceftriaxone + vancomycin", "Penicillin G", "Ceftazidime"],
-                                correct: 1,
-                                explanation: "Ceftriaxone + vancomycin covers S. pneumoniae and N. meningitidis in young adults."
-                            }
-                        ]
-                    },
-                    {
-                        id: 14,
-                        category: "Abdominal Pain",
-                        urgency: "medium",
-                        presentation: "35F with severe RUQ pain radiating to right shoulder. Pain started after eating fast food. Nausea and vomiting. Pain is colicky.",
-                        vitals: "BP: 125/80, HR: 95, RR: 18, O2: 99% RA, Temp: 99.4°F",
-                        steps: [
-                            {
-                                question: "Most likely diagnosis?",
-                                options: ["Acute cholecystitis", "Choledocholithiasis", "Hepatitis", "Peptic ulcer"],
-                                correct: 0,
-                                explanation: "RUQ pain + radiation to shoulder + triggered by fatty meal + Murphy's sign = acute cholecystitis."
-                            },
-                            {
-                                question: "Best initial imaging?",
-                                options: ["CT abdomen", "RUQ ultrasound", "HIDA scan", "MRCP"],
-                                correct: 1,
-                                explanation: "RUQ ultrasound is first-line for suspected gallbladder disease - evaluates stones, wall thickening, pericholecystic fluid."
-                            },
-                            {
-                                question: "If ultrasound shows stones, wall thickening, positive Murphy's sign?",
-                                options: ["Discharge with follow-up", "IV antibiotics", "Surgery consult", "Pain control only"],
-                                correct: 2,
-                                explanation: "Acute cholecystitis requires surgical consultation for cholecystectomy, preferably within 72 hours."
-                            }
-                        ]
-                    },
-                    {
-                        id: 15,
-                        category: "Syncope",
-                        urgency: "medium",
-                        presentation: "19F college athlete collapsed during basketball practice. Brief LOC, back to baseline quickly. No prodrome. Family history of sudden cardiac death in uncle at age 25.",
-                        vitals: "BP: 118/75, HR: 58, RR: 16, O2: 99% RA, Temp: 98.6°F",
-                        steps: [
-                            {
-                                question: "Most concerning red flag?",
-                                options: ["Young age", "Exertional syncope", "Family history", "Athletic activity"],
-                                correct: 1,
-                                explanation: "Exertional syncope in young athlete with family history of sudden death = high risk for hypertrophic cardiomyopathy."
-                            },
-                            {
-                                question: "Essential initial test?",
-                                options: ["Echocardiogram", "12-lead EKG", "Stress test", "Tilt table test"],
-                                correct: 1,
-                                explanation: "EKG screens for prolonged QT, Brugada pattern, delta waves, and signs of hypertrophic cardiomyopathy."
-                            },
-                            {
-                                question: "If EKG shows deep Q waves in lateral leads?",
-                                options: ["Discharge to primary care", "Cardiology consult", "Exercise restriction", "Echocardiogram stat"],
-                                correct: 3,
-                                explanation: "Deep Q waves + exertional syncope + family history = urgent echo to evaluate for hypertrophic cardiomyopathy."
-                            }
-                        ]
-                    }
-                ];
-                
-                this.loadCases();
+                this.adminPassword = "EM2024!";
+                this.passwordAttempt = "";
+                this.passwordError = "";
+                this.cases = this.loadCases();
                 this.render();
             }
             
             loadCases() {
                 try {
-                    const saved = localStorage.getItem('emCases');
-                    this.cases = saved ? JSON.parse(saved) : this.defaultCases;
-                } catch {
-                    this.cases = this.defaultCases;
+                    const saved = JSON.parse(sessionStorage.getItem('emCases') || 'null');
+                    return saved && saved.length > 0 ? saved : defaultCases;
+                } catch (e) {
+                    console.warn('Failed to load cases from storage:', e);
+                    return defaultCases;
                 }
             }
             
             saveCases() {
                 try {
-                    localStorage.setItem('emCases', JSON.stringify(this.cases));
-                } catch {
-                    // Ignore storage errors
+                    sessionStorage.setItem('emCases', JSON.stringify(this.cases));
+                } catch (e) {
+                    console.warn('Failed to save cases to storage:', e);
                 }
             }
             
-            getCurrentCase() {
-                return this.cases[this.currentCase];
+            getCurrentCase() { 
+                return this.cases[this.currentCase] || null; 
             }
             
-            getCurrentStep() {
-                const currentCase = this.getCurrentCase();
-                return currentCase ? currentCase.steps[this.step] : null;
+            getCurrentStep() { 
+                const currentCase = this.getCurrentCase(); 
+                return currentCase && currentCase.steps ? currentCase.steps[this.step] : null; 
             }
             
             handleAnswer(answerIndex) {
-                const questionKey = `${this.currentCase}-${this.step}`;
-                this.selectedAnswers[questionKey] = answerIndex;
+                const key = `${this.currentCase}-${this.step}`;
+                this.selectedAnswers[key] = answerIndex;
+                const step = this.getCurrentStep();
                 
-                const currentStep = this.getCurrentStep();
-                if (answerIndex === currentStep.correct) {
+                if (!step) return;
+                
+                if (answerIndex === step.correct) {
                     this.score.correct++;
                 }
                 this.score.total++;
-                
                 this.showExplanation = true;
                 this.render();
             }
             
             nextStep() {
                 const currentCase = this.getCurrentCase();
-                const isLastStep = this.step === currentCase.steps.length - 1;
+                if (!currentCase) return;
                 
-                if (isLastStep) {
-                    if (this.currentCase < this.cases.length - 1) {
-                        this.currentCase++;
-                        this.step = 0;
-                    } else {
-                        this.currentCase = 0;
-                        this.step = 0;
-                    }
-                } else {
+                if (this.step < currentCase.steps.length - 1) {
                     this.step++;
+                } else {
+                    this.nextCase();
                 }
-                
                 this.showExplanation = false;
                 this.render();
             }
             
-            resetCase() {
+            nextCase() {
+                if (this.currentCase < this.cases.length - 1) {
+                    this.currentCase++;
+                    this.step = 0;
+                } else {
+                    this.currentCase = 0;
+                    this.step = 0;
+                }
+                this.showExplanation = false;
+                this.render();
+            }
+            
+            selectCase(caseIndex) {
+                this.currentCase = caseIndex;
                 this.step = 0;
                 this.showExplanation = false;
-                this.selectedAnswers = {};
-                this.render();
-            }
-            
-            toggleAdmin() {
-                if (!this.isAuthenticated) {
-                    this.showPasswordPrompt();
-                } else {
-                    this.showAdmin = !this.showAdmin;
-                    this.editingCase = null;
-                    this.render();
-                }
-            }
-            
-            showPasswordPrompt() {
-                const password = prompt("Enter admin password to access case management:");
-                if (password === this.adminPassword) {
-                    this.isAuthenticated = true;
-                    this.showAdmin = true;
-                    this.render();
-                } else if (password !== null) { // User didn't cancel
-                    alert("Incorrect password. Access denied.");
-                }
-            }
-            
-            logout() {
-                this.isAuthenticated = false;
                 this.showAdmin = false;
                 this.render();
             }
             
-            addNewCase() {
-                this.editingCase = {
-                    id: 0,
-                    category: "",
-                    urgency: "medium",
-                    presentation: "",
-                    vitals: "",
-                    steps: [{
-                        question: "",
-                        options: ["", "", "", ""],
-                        correct: 0,
-                        explanation: ""
-                    }]
-                };
+            toggleAdmin() {
+                if (this.isAuthenticated) {
+                    this.showAdmin = !this.showAdmin;
+                } else {
+                    this.showAdmin = true;
+                }
                 this.render();
             }
             
-            editCase(caseItem) {
-                this.editingCase = JSON.parse(JSON.stringify(caseItem));
+            authenticateAdmin() {
+                if (this.passwordAttempt === this.adminPassword) {
+                    this.isAuthenticated = true;
+                    this.passwordError = "";
+                } else {
+                    this.passwordError = "Incorrect password";
+                }
+                this.render();
+            }
+            
+            addNewCase() {
+                const newCase = {
+                    id: Date.now(),
+                    category: "New Case",
+                    urgency: "medium",
+                    presentation: "Enter case presentation...",
+                    vitals: "Enter vital signs...",
+                    steps: [
+                        {
+                            question: "Enter question...",
+                            options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+                            correct: 0,
+                            explanation: "Enter explanation..."
+                        }
+                    ]
+                };
+                this.cases.push(newCase);
+                this.editingCase = newCase.id;
+                this.saveCases();
                 this.render();
             }
             
             deleteCase(caseId) {
                 if (confirm('Are you sure you want to delete this case?')) {
                     this.cases = this.cases.filter(c => c.id !== caseId);
+                    this.saveCases();
                     if (this.currentCase >= this.cases.length) {
                         this.currentCase = 0;
-                        this.step = 0;
                     }
-                    this.saveCases();
                     this.render();
                 }
             }
             
-            saveCase(formData) {
-                if (!formData.category || !formData.presentation || !formData.vitals) {
-                    alert('Please fill in all required fields');
-                    return;
-                }
+            saveEditedCase() {
+                const form = document.getElementById('caseEditForm');
+                if (!form) return;
                 
-                for (let step of formData.steps) {
-                    if (!step.question || step.options.some(opt => !opt) || !step.explanation) {
-                        alert('Please complete all steps');
-                        return;
-                    }
-                }
-                
-                if (formData.id === 0) {
-                    formData.id = Math.max(...this.cases.map(c => c.id)) + 1;
-                    this.cases.push(formData);
-                } else {
-                    const index = this.cases.findIndex(c => c.id === formData.id);
-                    this.cases[index] = formData;
-                }
-                
-                this.editingCase = null;
-                this.saveCases();
-                this.render();
-            }
-            
-            cancelEdit() {
-                this.editingCase = null;
-                this.render();
-            }
-            
-            render() {
-                const app = document.getElementById('app');
-                
-                if (this.showAdmin) {
-                    app.innerHTML = this.renderAdmin();
-                    this.bindAdminEvents();
-                } else {
-                    app.innerHTML = this.renderTrainer();
-                    this.bindTrainerEvents();
-                }
-            }
-            
-            renderTrainer() {
-                const currentCase = this.getCurrentCase();
-                const currentStep = this.getCurrentStep();
-                
-                if (!currentCase) {
-                    return `
-                        <div className="content">
-                            <div style="text-align: center; margin-top: 80px;">
-                                <p style="color: #6b7280; margin-bottom: 16px;">No cases available</p>
-                                <button class="btn btn-primary" onclick="trainer.toggleAdmin()">Add Cases</button>
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                const isLastStep = this.step === currentCase.steps.length - 1;
-                
-                return `
-                    <div class="header">
-                        <div class="header-top">
-                            <div class="header-title">💼 Emergency Briefcase</div>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <div class="score">Score: ${this.score.correct}/${this.score.total}</div>
-                                <button class="admin-toggle" onclick="trainer.toggleAdmin()">⚙️</button>
-                            </div>
-                        </div>
-                        <div class="header-info">
-                            <span>🕐 Case ${this.currentCase + 1} of ${this.cases.length}</span>
-                            <span class="urgency ${currentCase.urgency}">${currentCase.urgency} priority</span>
-                        </div>
-                    </div>
-                    
-                    <div class="content">
-                        <div class="case-header">
-                            <h2 class="case-title">${currentCase.category}</h2>
-                            <div class="presentation">${currentCase.presentation}</div>
-                            <div class="vitals">
-                                <div class="vitals-label">VITALS</div>
-                                <div class="vitals-text">${currentCase.vitals}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="progress">
-                            ${currentCase.steps.map((_, index) => 
-                                `<div class="progress-bar ${index <= this.step ? 'active' : ''}"></div>`
-                            ).join('')}
-                        </div>
-                        
-                        <div class="question">
-                            <h3 class="question-title">Step ${this.step + 1}: ${currentStep.question}</h3>
-                            <div class="options">
-                                ${currentStep.options.map((option, index) => {
-                                    const questionKey = `${this.currentCase}-${this.step}`;
-                                    const isSelected = this.selectedAnswers[questionKey] === index;
-                                    const isCorrect = index === currentStep.correct;
-                                    const showResult = this.showExplanation;
-                                    
-                                    let className = 'option';
-                                    let icon = '';
-                                    
-                                    if (showResult) {
-                                        if (isSelected && isCorrect) {
-                                            className += ' correct';
-                                            icon = '✓';
-                                        } else if (isSelected && !isCorrect) {
-                                            className += ' incorrect';
-                                            icon = '✗';
-                                        } else if (isCorrect) {
-                                            className += ' correct-answer';
-                                            icon = '✓';
-                                        }
-                                    }
-                                    
-                                    return `
-                                        <button class="${className}" 
-                                                onclick="trainer.handleAnswer(${index})" 
-                                                ${showResult ? 'disabled' : ''}>
-                                            <span>${option}</span>
-                                            ${icon ? `<span>${icon}</span>` : ''}
-                                        </button>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                        
-                        ${this.showExplanation ? `
-                            <div class="explanation">
-                                <div class="explanation-label">📖 EXPLANATION</div>
-                                <div class="explanation-text">${currentStep.explanation}</div>
-                            </div>
-                            
-                            <div class="actions">
-                                <button class="btn btn-primary" onclick="trainer.nextStep()">
-                                    ${isLastStep ? 'Next Case' : 'Next Step'} →
-                                </button>
-                                <button class="btn btn-secondary" onclick="trainer.resetCase()">
-                                    🔄 Reset Case
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-            
-            renderAdmin() {
-                if (this.editingCase) {
-                    return this.renderCaseEditor();
-                }
-                
-                return `
-                    <div class="admin-panel">
-                        <div class="admin-header">
-                            <h1>Case Management</h1>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="admin-toggle" onclick="trainer.logout()" title="Logout">🚪</button>
-                                <button class="admin-toggle" onclick="trainer.toggleAdmin()">✕</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="content">
-                        <button class="btn btn-add" onclick="trainer.addNewCase()">➕ Add New Case</button>
-                        
-                        ${this.cases.map(caseItem => `
-                            <div class="case-item">
-                                <h3>${caseItem.category}</h3>
-                                <p style="font-size: 14px; color: #6b7280; margin: 8px 0; line-height: 1.4;">${caseItem.presentation}</p>
-                                <span class="urgency ${caseItem.urgency}">${caseItem.urgency} priority</span>
-                                <div class="case-actions">
-                                    <button class="btn-small btn-edit" onclick="trainer.editCase(${JSON.stringify(caseItem).replace(/"/g, '&quot;')})">✏️ Edit</button>
-                                    <button class="btn-small btn-delete" onclick="trainer.deleteCase(${caseItem.id})">🗑️ Delete</button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            renderCaseEditor() {
-                const formData = this.editingCase;
-                const isNew = formData.id === 0;
-                
-                return `
-                    <div class="admin-panel">
-                        <div class="admin-header">
-                            <h1>${isNew ? 'New Case' : 'Edit Case'}</h1>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="admin-toggle" onclick="trainer.logout()" title="Logout">🚪</button>
-                                <button class="admin-toggle" onclick="trainer.cancelEdit()">✕</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="content">
-                        <form id="caseForm" onsubmit="trainer.handleFormSubmit(event)">
-                            <div class="form-group">
-                                <label class="form-label">Category*</label>
-                                <input type="text" class="form-input" name="category" value="${formData.category}" placeholder="e.g., Chest Pain, Trauma" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Urgency*</label>
-                                <select class="form-input" name="urgency">
-                                    <option value="low" ${formData.urgency === 'low' ? 'selected' : ''}>Low</option>
-                                    <option value="medium" ${formData.urgency === 'medium' ? 'selected' : ''}>Medium</option>
-                                    <option value="high" ${formData.urgency === 'high' ? 'selected' : ''}>High</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Presentation*</label>
-                                <textarea class="form-textarea" name="presentation" placeholder="Patient presentation and chief complaint" required>${formData.presentation}</textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Vitals*</label>
-                                <input type="text" class="form-input" name="vitals" value="${formData.vitals}" placeholder="BP: 120/80, HR: 85, RR: 16, O2: 99%, Temp: 98.6°F" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <label class="form-label">Steps*</label>
-                                    <button type="button" class="btn-small btn-add" onclick="trainer.addStep()">➕ Add Step</button>
-                                </div>
-                                
-                                <div id="stepsContainer">
-                                    ${formData.steps.map((step, stepIndex) => `
-                                        <div class="step-editor" data-step="${stepIndex}">
-                                            <div class="step-header">
-                                                <span style="font-weight: 500;">Step ${stepIndex + 1}</span>
-                                                ${formData.steps.length > 1 ? `<button type="button" class="btn-small btn-delete" onclick="trainer.removeStep(${stepIndex})">🗑️</button>` : ''}
-                                            </div>
-                                            
-                                            <div style="margin-bottom: 8px;">
-                                                <input type="text" class="form-input" name="question_${stepIndex}" value="${step.question}" placeholder="Question" required>
-                                            </div>
-                                            
-                                            ${step.options.map((option, optionIndex) => `
-                                                <div class="option-row">
-                                                    <input type="radio" name="correct_${stepIndex}" value="${optionIndex}" ${step.correct === optionIndex ? 'checked' : ''} class="option-radio">
-                                                    <input type="text" class="option-input" name="option_${stepIndex}_${optionIndex}" value="${option}" placeholder="Option ${optionIndex + 1}" required>
-                                                </div>
-                                            `).join('')}
-                                            
-                                            <textarea class="form-textarea" name="explanation_${stepIndex}" placeholder="Explanation for correct answer" required>${step.explanation}</textarea>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            
-                            <div style="display: flex; gap: 8px;">
-                                <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Save Case</button>
-                                <button type="button" class="btn btn-secondary" onclick="trainer.cancelEdit()">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                `;
-            }
-            
-            bindTrainerEvents() {
-                // Events are bound through onclick attributes
-            }
-            
-            bindAdminEvents() {
-                // Events are bound through onclick attributes
-            }
-            
-            addStep() {
-                this.editingCase.steps.push({
-                    question: "",
-                    options: ["", "", "", ""],
-                    correct: 0,
-                    explanation: ""
-                });
-                this.render();
-            }
-            
-            removeStep(stepIndex) {
-                this.editingCase.steps.splice(stepIndex, 1);
-                this.render();
-            }
-            
-            handleFormSubmit(event) {
-                event.preventDefault();
-                const form = event.target;
                 const formData = new FormData(form);
-                
                 const caseData = {
-                    id: this.editingCase.id,
+                    id: parseInt(formData.get('id')),
                     category: formData.get('category'),
                     urgency: formData.get('urgency'),
                     presentation: formData.get('presentation'),
@@ -1640,18 +988,25 @@
                     steps: []
                 };
                 
-                // Parse steps
-                const stepCount = this.editingCase.steps.length;
-                for (let i = 0; i < stepCount; i++) {
-                    const question = formData.get(`question_${i}`);
-                    const options = [
-                        formData.get(`option_${i}_0`),
-                        formData.get(`option_${i}_1`),
-                        formData.get(`option_${i}_2`),
-                        formData.get(`option_${i}_3`)
-                    ];
-                    const correct = parseInt(formData.get(`correct_${i}`)) || 0;
-                    const explanation = formData.get(`explanation_${i}`);
+                // Collect steps data
+                const stepElements = form.querySelectorAll('.step-editor');
+                stepElements.forEach((stepEl, index) => {
+                    const question = stepEl.querySelector(`input[name="step_${index}_question"]`).value;
+                    const explanation = stepEl.querySelector(`textarea[name="step_${index}_explanation"]`).value;
+                    const options = [];
+                    let correct = 0;
+                    
+                    for (let i = 0; i < 4; i++) {
+                        const optionInput = stepEl.querySelector(`input[name="step_${index}_option_${i}"]`);
+                        const correctRadio = stepEl.querySelector(`input[name="step_${index}_correct"][value="${i}"]`);
+                        
+                        if (optionInput) {
+                            options.push(optionInput.value);
+                        }
+                        if (correctRadio && correctRadio.checked) {
+                            correct = i;
+                        }
+                    }
                     
                     caseData.steps.push({
                         question,
@@ -1659,17 +1014,280 @@
                         correct,
                         explanation
                     });
+                });
+                
+                // Update the case
+                const caseIndex = this.cases.findIndex(c => c.id === caseData.id);
+                if (caseIndex !== -1) {
+                    this.cases[caseIndex] = caseData;
+                    this.saveCases();
+                    this.editingCase = null;
+                    this.render();
+                }
+            }
+            
+            cancelEdit() {
+                this.editingCase = null;
+                this.render();
+            }
+            
+            addStep(caseId) {
+                const caseIndex = this.cases.findIndex(c => c.id === caseId);
+                if (caseIndex !== -1) {
+                    this.cases[caseIndex].steps.push({
+                        question: "New question...",
+                        options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+                        correct: 0,
+                        explanation: "Enter explanation..."
+                    });
+                    this.render();
+                }
+            }
+            
+            removeStep(caseId, stepIndex) {
+                const caseIndex = this.cases.findIndex(c => c.id === caseId);
+                if (caseIndex !== -1 && this.cases[caseIndex].steps.length > 1) {
+                    this.cases[caseIndex].steps.splice(stepIndex, 1);
+                    this.render();
+                }
+            }
+            
+            render() {
+                const app = document.getElementById('app');
+                const currentCase = this.getCurrentCase();
+                const currentStep = this.getCurrentStep();
+                
+                if (!currentCase) {
+                    app.innerHTML = '<div class="content"><p>No cases available</p></div>';
+                    return;
                 }
                 
-                this.saveCase(caseData);
+                if (this.showAdmin) {
+                    app.innerHTML = this.renderAdmin();
+                } else {
+                    app.innerHTML = this.renderCase(currentCase, currentStep);
+                }
+                this.attachEventListeners();
+            }
+            
+            renderCase(currentCase, currentStep) {
+                const progressBars = currentCase.steps.map((_, i) => 
+                    `<div class="progress-bar ${i <= this.step ? 'active' : ''}"></div>`
+                ).join('');
+                
+                const selectedAnswer = this.selectedAnswers[`${this.currentCase}-${this.step}`];
+                
+                const options = currentStep ? currentStep.options.map((option, i) => {
+                    let className = 'option';
+                    if (this.showExplanation) {
+                        if (i === currentStep.correct) className += ' correct-answer';
+                        if (i === selectedAnswer && i !== currentStep.correct) className += ' incorrect';
+                        if (i === selectedAnswer && i === currentStep.correct) className += ' correct';
+                    }
+                    
+                    return `
+                        <button class="${className}" 
+                                onclick="app.handleAnswer(${i})" 
+                                ${this.showExplanation ? 'disabled' : ''}>
+                            ${option}
+                        </button>
+                    `;
+                }).join('') : '';
+                
+                const explanation = this.showExplanation && currentStep ? `
+                    <div class="explanation">
+                        <div class="explanation-label">EXPLANATION</div>
+                        <div class="explanation-text">${currentStep.explanation}</div>
+                    </div>
+                ` : '';
+                
+                const actions = this.showExplanation ? `
+                    <div class="actions">
+                        <button class="btn btn-primary" onclick="app.nextStep()">
+                            ${this.step < currentCase.steps.length - 1 ? 'Next Question' : 'Next Case'}
+                        </button>
+                    </div>
+                ` : '';
+                
+                return `
+                    <div class="header">
+                        <div class="header-top">
+                            <div class="title">Emergency Briefcase</div>
+                            <div class="score">${this.score.correct}/${this.score.total}</div>
+                            <button class="admin-toggle" onclick="app.toggleAdmin()">⚙️</button>
+                        </div>
+                        <div class="header-info">
+                            <span>Case ${this.currentCase + 1}/${this.cases.length}</span>
+                            <span class="urgency ${currentCase.urgency}">${currentCase.urgency.toUpperCase()}</span>
+                            <span>Step ${this.step + 1}/${currentCase.steps.length}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="case-header">
+                            <div class="case-title">${currentCase.category}</div>
+                            <div class="presentation">${currentCase.presentation}</div>
+                            <div class="vitals">
+                                <div class="vitals-label">VITAL SIGNS</div>
+                                <div class="vitals-text">${currentCase.vitals}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress">${progressBars}</div>
+                        
+                        ${currentStep ? `
+                            <div class="question">
+                                <div class="question-title">${currentStep.question}</div>
+                                <div class="options">${options}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${explanation}
+                        ${actions}
+                    </div>
+                `;
+            }
+            
+            renderAdmin() {
+                if (!this.isAuthenticated) {
+                    return `
+                        <div class="header">
+                            <div class="header-top">
+                                <div class="title">Admin Panel</div>
+                                <button class="admin-toggle" onclick="app.toggleAdmin()">✕</button>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="password-form">
+                                <div class="form-group">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-input" 
+                                           value="${this.passwordAttempt}"
+                                           oninput="app.passwordAttempt = this.value"
+                                           onkeypress="if(event.key==='Enter') app.authenticateAdmin()">
+                                    ${this.passwordError ? `<div class="error">${this.passwordError}</div>` : ''}
+                                </div>
+                                <button class="btn btn-primary" onclick="app.authenticateAdmin()">Login</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (this.editingCase) {
+                    return this.renderCaseEditor();
+                }
+                
+                const casesList = this.cases.map(c => `
+                    <div class="case-item">
+                        <div class="line-clamp-2"><strong>${c.category}</strong></div>
+                        <div class="line-clamp-2">${c.presentation}</div>
+                        <div class="case-actions">
+                            <button class="btn-small btn-edit" onclick="app.selectCase(${this.cases.indexOf(c)})">View</button>
+                            <button class="btn-small btn-edit" onclick="app.editingCase = ${c.id}; app.render()">Edit</button>
+                            <button class="btn-small btn-delete" onclick="app.deleteCase(${c.id})">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="admin-panel">
+                        <div class="admin-header">
+                            <div class="title">Case Management</div>
+                            <button class="admin-toggle" onclick="app.toggleAdmin()">✕</button>
+                        </div>
+                        <button class="btn btn-add" onclick="app.addNewCase()">Add New Case</button>
+                        ${casesList}
+                    </div>
+                `;
+            }
+            
+            renderCaseEditor() {
+                const editCase = this.cases.find(c => c.id === this.editingCase);
+                if (!editCase) return '';
+                
+                const stepsHtml = editCase.steps.map((step, index) => `
+                    <div class="step-editor">
+                        <div class="step-header">
+                            <span>Step ${index + 1}</span>
+                            <button class="btn-small btn-delete" onclick="app.removeStep(${editCase.id}, ${index})" 
+                                    ${editCase.steps.length <= 1 ? 'disabled' : ''}>Remove</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Question</label>
+                            <input type="text" class="form-input" name="step_${index}_question" value="${step.question}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Options</label>
+                            ${step.options.map((option, optIndex) => `
+                                <div class="option-row">
+                                    <input type="radio" class="option-radio" name="step_${index}_correct" value="${optIndex}" 
+                                           ${step.correct === optIndex ? 'checked' : ''}>
+                                    <input type="text" class="option-input" name="step_${index}_option_${optIndex}" value="${option}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Explanation</label>
+                            <textarea class="form-textarea" name="step_${index}_explanation">${step.explanation}</textarea>
+                        </div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="admin-panel">
+                        <div class="admin-header">
+                            <div class="title">Edit Case</div>
+                            <button class="admin-toggle" onclick="app.cancelEdit()">✕</button>
+                        </div>
+                        <div class="case-editor">
+                            <form id="caseEditForm">
+                                <input type="hidden" name="id" value="${editCase.id}">
+                                <div class="form-group">
+                                    <label class="form-label">Category</label>
+                                    <input type="text" class="form-input" name="category" value="${editCase.category}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Urgency</label>
+                                    <select class="form-input" name="urgency">
+                                        <option value="low" ${editCase.urgency === 'low' ? 'selected' : ''}>Low</option>
+                                        <option value="medium" ${editCase.urgency === 'medium' ? 'selected' : ''}>Medium</option>
+                                        <option value="high" ${editCase.urgency === 'high' ? 'selected' : ''}>High</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Presentation</label>
+                                    <textarea class="form-textarea" name="presentation">${editCase.presentation}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Vitals</label>
+                                    <input type="text" class="form-input" name="vitals" value="${editCase.vitals}">
+                                </div>
+                                <div class="form-group">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <label class="form-label" style="margin-bottom: 0;">Steps</label>
+                                        <button type="button" class="btn-small btn-edit" onclick="app.addStep(${editCase.id})">Add Step</button>
+                                    </div>
+                                    ${stepsHtml}
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" class="btn btn-success" onclick="app.saveEditedCase()">Save Changes</button>
+                                    <button type="button" class="btn btn-secondary" onclick="app.cancelEdit()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            attachEventListeners() {
+                // Event listeners are handled via onclick attributes in the HTML
+                // This method is kept for potential future enhancements
             }
         }
         
         // Initialize the app
-        let trainer;
-        document.addEventListener('DOMContentLoaded', function() {
-            trainer = new EmCaseTrainer();
-        });
+        const app = new EmCaseTrainer();
+        window.app = app; // Make globally accessible for onclick handlers
     </script>
 </body>
 </html>
