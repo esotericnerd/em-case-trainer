@@ -35,6 +35,21 @@
             align-items: center; 
             margin-bottom: 8px; 
         }
+        .header-left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1;
+        }
+        .logo {
+            width: 280px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
         .header-right {
             display: flex;
             gap: 8px;
@@ -1803,7 +1818,40 @@
                 return `
                     <div class="header">
                         <div class="header-top">
-                            <div class="title">Emergency Briefcase</div>
+                            <div class="header-left">
+                                <div class="logo">
+                                    <svg viewBox="0 0 450 100" xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Medical briefcase -->
+                                        <g transform="translate(10, 5)">
+                                            <!-- Handle -->
+                                            <rect x="30" y="-6" width="35" height="7" rx="3.5" fill="none" stroke="white" stroke-width="3"/>
+                                            <!-- Handle supports -->
+                                            <rect x="26" y="-1" width="7" height="14" rx="2" fill="white"/>
+                                            <rect x="62" y="-1" width="7" height="14" rx="2" fill="white"/>
+                                            
+                                            <!-- Main briefcase body -->
+                                            <rect x="0" y="12" width="95" height="56" rx="7" fill="none" stroke="white" stroke-width="3"/>
+                                            
+                                            <!-- Latches -->
+                                            <rect x="-5" y="25" width="10" height="7" rx="2" fill="white"/>
+                                            <rect x="90" y="25" width="10" height="7" rx="2" fill="white"/>
+                                            <rect x="-5" y="45" width="10" height="7" rx="2" fill="white"/>
+                                            <rect x="90" y="45" width="10" height="7" rx="2" fill="white"/>
+                                            
+                                            <!-- Medical cross in circle -->
+                                            <circle cx="47.5" cy="40" r="18" fill="white"/>
+                                            <circle cx="47.5" cy="40" r="16" fill="none" stroke="#dc2626" stroke-width="2"/>
+                                            <!-- Cross -->
+                                            <rect x="44" y="30" width="7" height="20" fill="#dc2626"/>
+                                            <rect x="37.5" y="36.5" width="20" height="7" fill="#dc2626"/>
+                                        </g>
+                                        
+                                        <!-- Text -->
+                                        <text x="130" y="45" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white">emergency</text>
+                                        <text x="130" y="75" font-family="Arial, sans-serif" font-size="28" font-weight="300" fill="white">briefcase</text>
+                                    </svg>
+                                </div>
+                            </div>
                             <div class="header-right">
                                 <div class="score">${this.score.correct}/${this.score.total}</div>
                                 <div class="timer">${questionTime}s</div>
